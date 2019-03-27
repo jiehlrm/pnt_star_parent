@@ -1,0 +1,1934 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="commonMapperZW">
+ 
+<!-- 查询表中的数据量，用来做自增使用,需要注意这个是从零开始的，返回结果就可以使用 -->
+<select id="PayServiceQryCount" parameterType="map" resultType="hashMap">
+    SELECT count(*) as count FROM ${tableName}
+</select> 
+
+<select id="PayServiceQryPK" parameterType="map" resultType="hashMap">
+SELECT SEQ_${tableName}.nextval as id   
+</select>
+ 
+ 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~余额共享类型~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- 查询余额共享规则类型 -->
+<select id="PayServiceQryBalanceShareRuleType" parameterType="map" resultType="hashMap">
+   SELECT SHARE_RULE_TYPE_NAME FROM balance_share_rule_type;
+</select>
+
+<!-- 通过类型ID查询余额共享规则类型 -->
+<select id="PayServiceQryBalanceShareRuleTypeById" parameterType="map" resultType="hashMap">
+   SELECT * FROM balance_share_rule_type
+   where SHARE_RULE_TYPE_ID=#{shareRuleTypeID};
+</select>
+ <!-- 通过类型名查询余额共享规则ID -->
+ <select id="PayServiceQryBalanceShareRuleTypeByName" parameterType="map" resultType="hashMap">
+   SELECT SHARE_RULE_TYPE_ID FROM balance_share_rule_type
+   where SHARE_RULE_TYPE_NAME=#{shareRuleTypeName};
+</select> 
+
+
+
+<!-- 删除余额共享类型 -->
+<delete id="PayServiceDelBalanceShareRuleType" parameterType="Map" >
+	 delete from balance_share_rule_type 
+	 where  BALANCE_SHARE_RULE_TYPE=#{shareRuleTypeID}
+</delete>
+
+<!-- 更新余额共享类型 -->
+<update id="PayServiceUpBalanceShareRuleType">
+	update  balance_share_rule_type 
+	 set    <if test="shareRuleTypeName!=null and shareRuleTypeName!=''" >    
+	        SHARE_RULE_TYPE_NAME=#{shareRuleTypeName},
+	        </if> 
+	        <if test="statusCD!=null and statusCD!=''">
+	        STATUS_CD=#{statusCD},
+	        </if>	        
+	        UPDATE_STAFF=#{updateStaff},	       	 		
+	 		UPDATE_DATE=now()
+</update>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~产品实例与账户关系信息+关系属性表+账户表~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- 查询 -->
+<select id="PayServiceQryProdInstAcctRel" parameterType="map" resultType="hashMap">
+           SELECT
+				a.ACCT_NAME,
+				a.ACCT_BILLING_TYPE,
+				a.ACCT_CD,
+				b.PRIORITY,
+				b.PAYMENT_LIMIT_TYPE,
+				b.PAYMENT_LIMIT,
+				b.UPPER_AMOUNT,
+				b.IF_DEFAULT_ACCT_ID,
+				b.AGREE_ID,
+				c.ATTR_NAME,
+				c.ATTR_VALUE
+			FROM
+				account a,
+				prod_inst_acct_rel b,
+				prod_inst_acct_rel_attr c
+			WHERE
+				a.ACCT_ID = b.ACCT_ID
+			AND b.PROD_INST_ACCT_REL_ID = c.PROD_INST_ACCT_REL_ID
+</select>
+
+<select id="PayServiceQryProdInstAcctRelById" parameterType="map" resultType="hashMap">
+           SELECT
+				a.ACCT_NAME,
+				a.ACCT_BILLING_TYPE,
+				a.ACCT_CD,
+				b.PRIORITY,
+				b.PAYMENT_LIMIT_TYPE,
+				b.PAYMENT_LIMIT,
+				b.UPPER_AMOUNT,
+				b.IF_DEFAULT_ACCT_ID,
+				b.AGREE_ID,
+				c.ATTR_NAME,
+				c.ATTR_VALUE
+			FROM
+				account a,
+				prod_inst_acct_rel b,
+				prod_inst_acct_rel_attr c
+			WHERE
+				a.ACCT_ID = b.ACCT_ID
+			AND b.PROD_INST_ACCT_REL_ID = c.PROD_INST_ACCT_REL_ID 
+			AND b.PROD_INST_ACCT_REL_ID=#{prodInstAcctRelId}
+</select>
+            
+<!-- 插入 -->
+<insert id="PayServiceAddProdInstAcctRel" parameterType="map" >
+        
+   insert into prod_inst_acct_rel
+   (
+     PROD_INST_ACCT_REL_ID,
+	 ACCT_ID,
+	 PROD_INST_ID,
+	 ACCT_ITEM_GROUP_ID,
+	 PRIORITY,
+	 PAYMENT_LIMIT_TYPE,
+	 PAYMENT_LIMIT,
+	 UPPER_AMOUNT,
+	 EFF_DATE,
+	 EXP_DATE,
+	 IF_DEFAULT_ACCT_ID,
+	 STATUS_CD,
+	 LAST_ORDER_ITEM_ID,
+	 STATUS_DATE,
+	 AGREE_ID,
+	 CREATE_STAFF,
+	 CREATE_DATE	
+   )
+   values
+   (
+    #{prodInstAcctRelId},
+    #{acctId},
+    #{prodInstId},
+    #{acctItemGroupId},
+    #{priority},
+    #{paymentLimitType},
+    #{paymentLimit},
+    #{upperAmount},
+    now(),
+    str_to_date(#{expDate},'%Y-%m-%d %H:%i:%s'),
+    #{ifDefaultAcctId},
+    #{statusCd},
+    #{lastOrderItemId},
+    now(),
+    #{agreeId},
+    #{createStaff},
+    now()
+   )  
+</insert>
+
+<delete id="PayServiceDelProdInstAcctRel" parameterType="map" >
+     delete from prod_inst_acct_rel 
+	 where  PROD_INST_ACCT_REL_ID=#{prodInstAcctRelId}
+</delete>
+
+<insert id="PayServiceAddProdInstAcctRelAttr" parameterType="Map">
+    insert into  prod_inst_acct_rel_attr
+   (
+	PROD_INST_ACCT_REL_ATTR_ID,
+	PROD_INST_ACCT_REL_ID,
+	ATTR_ID,
+	ATTR_VALUE_ID,
+	ATTR_VALUE,
+	EFF_DATE,
+	EXP_DATE,
+	ATTR_NAME,
+	STATUS_CD,
+	STATUS_DATE,
+	CREATE_STAFF,
+	CREATE_DATE
+   )
+   values
+   (
+   #{prodInstAcctRelAttrId},
+   #{prodInstAcctRelId},
+   #{attrId},
+   #{attrValueId},
+   #{attrValue},
+   now(),
+   str_to_date(#{expDate},'%Y-%m-%d %H:%i:%s'),
+   #{attrName},
+   #{statusCd},
+   now(),
+   #{createStaff},
+   now() 
+   )
+</insert>
+
+<!-- 更新 -->
+<update id="PayServiceUpProdInstAcctRel" parameterType="map" >
+
+</update>
+
+<!-- 删除 -->
+<delete id="PayServiceDelProdInstAcctRelAttr" parameterType="map" >
+     delete from prod_inst_acct_rel_attr 
+	 where  PROD_INST_ACCT_REL_ATTR_ID=#{prodInstAcctRelAttrId}
+</delete>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 违约金减免记录明细LateFeeAdjust    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!-- 查询违约金减免记录明细 -->
+<select id="PayServiceQryLateFeeAdjust" parameterType="map" resultType="hashMap">
+ select 
+		late_fee_adjust_id,
+		acct_id,
+		billing_cycle_id,
+		adjust_flag,
+		case 
+			when adjust_type=1 then "减量"
+			when adjust_type=2 then "百分比"
+			when adjust_type=3 then "固定值"
+			when adjust_type=4 then "按天数算"
+		end adjust_type,
+		adjust_value,
+        row_value,
+        case
+        	when status_cd=1 then "未处理"
+        	when status_cd=2 then "已处理"
+        	when status_cd=3 then "已取消"
+        	when status_cd=4 then "处理失败"
+		end status_cd,
+		adjust_reason
+from late_fee_adjust
+</select>
+
+<!-- 通过ID查询违约金减免记录明细全部的信息 -->
+<select id="PayServiceQryLateFeeAdjustById" parameterType="map" resultType="hashMap">
+ select 
+		late_fee_adjust_id,
+		acct_id,
+		billing_cycle_id,
+		adjust_flag,
+		case 
+			when adjust_type=1 then "减量"
+			when adjust_type=2 then "百分比"
+			when adjust_type=3 then "固定值"
+			when adjust_type=4 then "按天数算"
+		end adjust_type,
+		adjust_value,
+        row_value,
+        case
+        	when status_cd=1 then "未处理"
+        	when status_cd=2 then "已处理"
+        	when status_cd=3 then "已取消"
+        	when status_cd=4 then "处理失败"
+		end status_cd,
+		adjust_reason
+from late_fee_adjust
+where late_fee_adjust_id=#{lateFeeAdjustId}
+</select>
+
+<!-- 插入违约金见面记录明细信息 -->
+<insert id="PayServiceAddLateFeeAdjust" parameterType="Map">
+
+INSERT INTO late_fee_adjust (	
+	late_fee_adjust_id,
+	acct_id,
+	prod_inst_id,
+	billing_cycle_id,
+	adjust_flag,
+	adjust_type,
+	adjust_value,
+	row_value,
+	bill_id,
+	status_cd,
+	status_date,
+	staff_id,
+	eff_date,
+	exp_date,
+	adjust_reason
+)
+VALUES(
+	#{lateFeeAdjustId},
+	#{acctId},
+	#{prodInstId},
+	#{billingCycleId},
+	#{adjustFlag},
+	#{adjustType},
+	#{adjustValue},
+	#{rowValue},
+	#{billId},
+	#{statusCd},
+	NOW(),
+	#{staffId},
+	NOW(),
+	str_to_date(#{expDate},'%Y-%m-%d %H:%i:%s'),
+	#{adjustReason}
+	)
+	
+</insert>
+
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 违约金减免规则 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<select id="PayServiceQryLateFeeComputeRule" parameterType="map" resultType="hashMap">
+SELECT
+	late_fee_rule_id,
+	billing_cycle_id,
+	lan_id,
+	prod_id,
+    case 
+	    when payment_mode_cd=1200 then "后付费"
+	    when payment_mode_cd=1201 then "准实时预付费"
+	    when payment_mode_cd=1202 then "准预付费实时信控"
+	    when payment_mode_cd=2100 then "预付费"
+	    when payment_mode_cd=3100 then "按电信规则确定"
+	end payment_mode_cd,
+	`offset`,
+	case 
+		when status_cd=1 then "有效"
+		when status_cd=2 then "无效"
+		when status_cd=3 then "已归档"
+		when status_cd=4 then "在途"
+	end status_cd,
+	adjust_days,
+	remark
+FROM
+	late_fee_compute_rule
+</select>
+
+<select id="PayServiceQryLateFeeComputeRuleById" parameterType="map" resultType="hashMap">
+SELECT
+	late_fee_rule_id,
+	billing_cycle_id,
+	lan_id,
+	prod_id,
+    case 
+	    when payment_mode_cd=1200 then "后付费"
+	    when payment_mode_cd=1201 then "准实时预付费"
+	    when payment_mode_cd=1202 then "准预付费实时信控"
+	    when payment_mode_cd=2100 then "预付费"
+	    when payment_mode_cd=3100 then "按电信规则确定"
+	end payment_mode_cd,
+	`offset`,
+	case 
+		when status_cd=1 then "有效"
+		when status_cd=2 then "无效"
+		when status_cd=3 then "已归档"
+		when status_cd=4 then "在途"
+	end status_cd,
+	adjust_days,
+	remark
+FROM
+	late_fee_compute_rule
+WHERE 
+	late_fee_rule_id=#{lateFeeRuleId}
+</select>
+
+<insert id="PayServiceAddLateFeeComputeRule">
+INSERT INTO late_fee_compute_rule (
+		late_fee_rule_id,
+		billing_cycle_id,
+		lan_id,
+		prod_id,
+		payment_mode_cd,
+		`offset`,
+		adjust_days,
+		remark,
+		status_cd,
+		create_staff,
+		update_staff,
+		create_date,
+		update_date,
+		status_date
+)
+VALUES
+	(
+    #{lateFeeRuleId},
+    #{billingCycleId},
+    #{lanID},
+    #{prodId},
+    #{paymentModeId},
+    #{offset},
+    #{adjustDays},
+    #{remark},
+    #{statusCd},
+    #{createStaff},
+   NULL,
+   NOW(),
+   NULL,
+   NOW()
+)
+</insert>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 违约金计费比例配置 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryLateFeeRate" parameterType="map" resultType="hashMap">
+ select 
+		late_fee_rate_id,
+		lan_id,
+		prod_id,
+		acct_item_type_id,
+		late_fee_item_id,
+		rate_value,
+		case 
+			when status_cd=1 then "有效"
+			when status_cd=2 then "无效"
+			when status_cd=3 then "已归档"
+			when status_cd=4 then "在途"
+		end status_cd 
+from  late_fee_rate
+</select>
+
+<!-- 通过ID查询违约金减免记录明细全部的信息 -->
+<select id="PayServiceQryLateFeeRateById" parameterType="map" resultType="hashMap">
+ select 
+		late_fee_rate_id,
+		lan_id,
+		prod_id,
+		acct_item_type_id,
+		late_fee_item_id,
+		rate_value,
+		case 
+			when status_cd=1 then "有效"
+			when status_cd=2 then "无效"
+			when status_cd=3 then "已归档"
+			when status_cd=4 then "在途"
+		end status_cd 
+from  late_fee_rate
+where late_fee_rate_id=#{lateFeeRateId}
+</select>
+
+<!-- 插入违约金见面记录明细信息 -->
+<insert id="PayServiceAddLateFeeRate" parameterType="Map">
+INSERT INTO late_fee_rate (
+	late_fee_rate_id,
+	lan_id,
+	prod_id,
+	acct_item_type_id,
+	late_fee_item_id,
+	rate_value,
+	status_cd,
+	create_staff,
+	update_staff,
+	create_date,
+	status_date,
+	update_date
+)
+VALUES
+	(
+		#{lateFeeRateId},
+		#{lanId},
+		#{prodId},
+		#{acctItemTypeId},
+		#{lateFeeItemId},
+		#{rateValue},
+		#{statusCd},
+		#{createStaff},
+		NULL,
+		Now(),
+		NOW(),
+		NULL
+	)
+
+</insert>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 银行分行信息 BANK_BRANCH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryBankBranch" parameterType="map" resultType="hashMap">
+select 
+		BANK_BRANCH_ID,
+		BANK_ACCT,
+		BANK_ACCT_NAME,
+		BANK_BRANCH_NAME,
+		BANK_CODE,
+		LAN_ID,
+		PAR_BRANCH_ID,
+		case
+	                 when STATUS_CD=1 then "有效"
+	                 when STATUS_CD=2 then "无效"
+	                 when STATUS_CD=3 then "已归档"
+	                 when STATUS_CD=4 then "在途"
+	                 end STATUS_CD ,
+		BANK_TYPE,
+		LAN_ID,
+		AREA_ID
+from bank_branch
+</select>
+
+<!-- 通过ID查询银行分行信息 -->
+<select id="PayServiceQryBankBranchById" parameterType="map" resultType="hashMap">
+SELECT BANK_BRANCH_ID,
+		BANK_ACCT,
+		BANK_ACCT_NAME,
+		BANK_BRANCH_NAME,
+		BANK_CODE,
+		LAN_ID,
+		PAR_BRANCH_ID,
+		case
+	                 when STATUS_CD=1 then "有效"
+	                 when STATUS_CD=2 then "无效"
+	                 when STATUS_CD=3 then "已归档"
+	                 when STATUS_CD=4 then "在途"
+	                 end STATUS_CD ,
+		BANK_TYPE,
+		LAN_ID,
+		AREA_ID
+from bank_branch
+where BANK_BRANCH_ID=#{bankBranchId}
+</select>
+
+<!-- 插入银行分行信息 -->
+<insert id="PayServiceAddBankBranch" parameterType="Map">
+INSERT INTO
+bank_branch(
+  		BANK_BRANCH_ID,
+		PAR_BRANCH_ID,
+		BANK_ID,
+        BANK_BRANCH_NAME,
+		BANK_ACCT,
+		BANK_ACCT_NAME,
+		LAN_ID,
+		BANK_CODE,
+		STATUS_CD,
+		CREATE_STAFF,
+		CREATE_DATE,
+		STATUS_DATE,
+		BANK_TYPE,
+		LATN_ID,
+		AREA_ID
+)
+VALUES
+		(
+		#{bankBranchId},
+		#{parBranchId},
+		#{bankId},
+		#{bankBranchName},
+		#{bankAcct},
+		#{bankAcctName},
+		#{lanId},
+		#{bankCode},
+		#{statusCd},
+		#{createStaff},
+		NOW(),
+		NOW(),
+		#{bankType},
+		#{latnId},
+		#{areaId}
+)
+</insert>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 一次费用计算结果ONE_ITEM_CALC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryOneItemCalc" parameterType="map" resultType="hashMap">
+select 
+		one_acct_item_id,
+		cust_order_id,
+		order_item_id,
+		source_type,
+		acct_item_type_id,
+		billing_cycle_id,
+		acct_id,
+		prod_inst_id,
+		should_amount,
+		charge_method,
+		staff_id,
+		org_id,
+		status_cd
+from one_item_calc
+</select>
+
+<!-- 通过ID查询一次费用计算结果 -->
+<select id="PayServiceQryOneItemCalcById" parameterType="map" resultType="hashMap">
+SELECT  one_acct_item_id,
+		cust_order_id,
+		order_item_id,
+		source_type,
+		acct_item_type_id,
+		billing_cycle_id,
+		acct_id,
+		prod_inst_id,
+		should_amount,
+		charge_method,
+		staff_id,
+		org_id,
+		status_cd 
+from one_item_calc
+where one_acct_item_id=#{oneAcctItemId}
+</select>
+
+<!-- 插入一次费用计算结果  -->
+<insert id="PayServiceAddOneItemCalc" parameterType="Map">
+INSERT INTO one_item_calc()
+VALUES
+(
+	#{oneAcctItemId},
+	#{custOrderId},
+	#{orderItemId},
+	#{sourceType},
+	#{acctItemTypeId},
+	#{balanceTypeId},
+	#{billingCycleId},
+	#{acctId},
+	#{prodInstId},
+	#{shouldAmount},
+	#{taxRateConfigId},
+	#{taxRate},
+	#{tax},
+	#{price},
+	#{resultItemType},
+	NOW(),
+	#{chargeMethod},
+	#{lanId},
+	#{staffId},
+	#{orgId},
+	#{statusId},
+	NOW()
+)
+</insert>
+
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 一次费账目ONE_ITEM_RESULT+ONE_ITEM_DISCOUNT_LOG+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~发票~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<select id="PayServiceQryOneItemResult" parameterType="map" resultType="hashMap">
+select 
+			a.one_acct_item_id,
+			a.source_type,
+			a.bill_id,
+			a.payment_id,
+			a.prod_inst_id,
+			a.COUPON_INST_ID,
+			a.real_amount,
+			a.result_item_type,
+			a.staff_id,
+			a.charge_method,
+			a.if_charge_off,
+			a.merge_acct_deal_time,
+			b.cust_order_nbr,
+			b.discount,
+			b.agree_staff_id,
+			b.agree_seq,
+			b.agree_dept_no,
+			b.adjust_reason
+from one_item_result a,one_item_discount_log b
+where a.one_acct_item_id=b.one_acct_item_id
+</select>
+
+<select id="qurComInvoice" resultType="hashMap">
+	select a.INVOICE_ID,a.INVOICE_NUM,a.AMOUNT,b.INVOICE_ITEM_ID,b.ITEM_NAME
+	from invoice a INNER JOIN invoice_detail b
+	on a.INVOICE_ID=b.INVOICE_ID
+	<if test="invoice_id!=''">
+		where a.INVOICE_ID=#{invoice_id}
+	</if>
+</select>
+
+<!-- -->
+<select id="PayServiceQryOneItemResultById" parameterType="map" resultType="hashMap">
+select 
+			a.one_acct_item_id,
+			a.source_type,
+			a.bill_id,
+			a.payment_id,
+			a.prod_inst_id,
+			a.COUPON_INST_ID,
+			a.real_amount,
+			a.result_item_type,
+			a.staff_id,
+			a.charge_method,
+			a.if_charge_off,
+			a.merge_acct_deal_time,
+			b.cust_order_nbr,
+			b.discount,
+			b.agree_staff_id,
+			b.agree_seq,
+			b.agree_dept_no,
+			b.adjust_reason
+from one_item_result a,one_item_discount_log b
+where a.one_acct_item_id=b.one_acct_item_id
+AND a.one_acct_item_id=#{oneAcctItemId}
+</select>
+
+<!-- -->
+<insert id="PayServiceAddOneItemResult" parameterType="Map">
+INSERT INTO one_item_result
+(
+    one_acct_item_id,
+	cust_order_id,
+	order_item_id,
+	source_type,
+	acct_item_type_id,
+	billing_cycle_id,
+	item_source_id,
+	acct_id,
+	prod_inst_id,
+	real_amount,
+	result_item_type,
+	charge_method,
+	staff_id,
+	org_id,
+	if_charge_off,
+	status_cd,
+	COUPON_INST_ID
+)
+VALUES(
+   #{oneAcctItemId},
+   #{custOrderId},
+   #{orderItemId},
+   #{sourceType},
+   #{acctItemTypeId},
+   #{billingCycleId},
+   #{itemSourceId},
+   #{acctId},
+   #{prodInstId},
+   #{realAmount},
+   #{resultItemType},
+   #{chargeMethod},
+   #{staffId},
+   #{orgId},
+   #{ifChargeOff},
+   #{statusCd},
+   #{couponInstId}
+)
+</insert>
+
+<delete id="PayServiceDelOneItemResult" parameterType="Map">
+delete from one_item_result
+where one_acct_item_id=#{oneAcctItemId}
+</delete>
+
+
+<!-- 通过ID一次费优惠记录 -->
+<select id="PayServiceQryOneItemDiscountLogById" parameterType="map" resultType="hashMap">
+SELECT * from one_item_discount_log
+where one_charge_discount_id=#{oneChargeDiscountId}
+</select>
+
+<!-- 插入一次费优惠记录 -->
+<insert id="PayServiceAddOneItemDiscountLog" parameterType="Map">
+INSERT INTO one_item_discount_log ()
+VALUES
+	(
+	#{oneChargeDiscountId},
+	#{oneAcctItemId},
+	#{custOrderNbr},
+	#{orderItemId},
+	#{acctId},
+	#{prodInstId},
+	#{offerInstId},
+	#{discount},
+	#{agreeStaffId},
+	#{agreeSeq},
+	#{agreeDeptNo},
+	#{adjustReason},
+	#{statusCd},
+	NOW(),
+	NOW()
+	)
+</insert>
+
+
+
+<delete id="PayServiceDelOneItemDiscountLog" parameterType="Map">
+delete from one_item_discount_log
+where one_item_discount_log_id=#{oneChargeDiscountId}
+</delete>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 补收补退：一次费ACCT_ITEM_PLUSMINUS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryAcctItemPlusMinus" parameterType="map" resultType="hashMap">
+select 
+		PLUS_SEQ_NBR,
+		ACC_NUM,
+		PROD_INST_ID,
+		MERGE_BALANCE,
+		REASON,
+		MERGE_FLAG,
+		STAFF_ID,
+		BILLING_CYCLE_ID,
+		ACCT_ID,
+		ACCT_ITEM_TYPE_ID,
+		ORG_ID,
+		PLUS_TYPE,
+		AMOUNT
+from acct_item_plusminus
+</select>
+
+<!-- 通过ID查询一次费用计算结果 -->
+<select id="PayServiceQryAcctItemPlusMinusById" parameterType="map" resultType="hashMap">
+SELECT * from acct_item_plusminus
+where PLUS_SEQ_NBR=#{plusSeqNbr}
+</select>
+
+<!-- 插入一次费用计算结果  -->
+<insert id="PayServiceAddAcctItemPlusMinus" parameterType="Map">
+INSERT INTO acct_item_plusminus()
+VALUES
+(
+   #{plusSeqNbr},
+   #{accNum},
+   #{prodInstId},
+   NOW(),
+   #{mergeBalance},
+   #{reason},
+   #{mergeFlag},
+   #{staffId},
+   #{billingCycleId},
+   #{acctId},
+   #{acctItemTypeId},
+   #{statusCd},
+   NOW(),
+   #{orgId},
+   #{plusType},
+   #{amount},
+   #{feeCycleId},
+   #{custOrderId}
+)
+</insert>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 余额共享+余额共享类型 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryBalanceShareRuleAndType" parameterType="map" resultType="hashMap">
+select          a.SHARE_RULE_ID,
+				a.ACCT_BALANCE_ID,
+				a.SHARE_RULE_TYPE_PRI,
+				b.SHARE_RULE_TYPE_NAME,
+				a.UPPER_AMOUNT,
+				a.LOWER_AMOUNT,
+				a.OBJ_ID,
+                case 
+                     when a.OBJ_TYPE=1 then "账户"
+                     when a.OBJ_TYPE=2 then "客户"
+                     when a.OBJ_TYPE=3 then "用户"
+                     when a.OBJ_TYPE=4 then "销售品"
+                     end OBJ_TYPE,
+                case
+	                 when a.STATUS_CD=1 then "有效"
+	                 when a.STATUS_CD=2 then "无效"
+	                 when a.STATUS_CD=3 then "已归档"
+	                 when a.STATUS_CD=4 then "在途"
+	                 end STATUS_CD
+FROM balance_share_rule a,balance_share_rule_type b
+where a.SHARE_RULE_TYPE_ID=b.SHARE_RULE_TYPE_ID
+</select>
+
+<!-- 通过ID查询余额共享余额共享类型 -->
+<select id="PayServiceQryPayServiceQryBalanceShareRuleAndTypeById" parameterType="map" resultType="hashMap">
+select          a.SHARE_RULE_ID,
+				a.ACCT_BALANCE_ID,
+				a.SHARE_RULE_TYPE_PRI,
+				b.SHARE_RULE_TYPE_NAME,
+				a.UPPER_AMOUNT,
+				a.LOWER_AMOUNT,
+				a.OBJ_ID,
+                case 
+                     when a.OBJ_TYPE=1 then "账户"
+                     when a.OBJ_TYPE=2 then "客户"
+                     when a.OBJ_TYPE=3 then "用户"
+                     when a.OBJ_TYPE=4 then "销售品"
+                     end OBJ_TYPE,
+                case
+	                 when a.STATUS_CD=1 then "有效"
+	                 when a.STATUS_CD=2 then "无效"
+	                 when a.STATUS_CD=3 then "已归档"
+	                 when a.STATUS_CD=4 then "在途"
+	                 end STATUS_CD
+FROM balance_share_rule a,balance_share_rule_type b
+where a.SHARE_RULE_TYPE_ID=b.SHARE_RULE_TYPE_ID
+AND a.SHARE_RULE_ID=#{shareRuleId}
+</select>
+
+<!-- 插入一次费用计算结果  -->
+<insert id="PayServiceAddBalanceShareRule" parameterType="Map">
+INSERT INTO balance_share_rule
+(
+   SHARE_RULE_ID,
+   ACCT_BALANCE_ID,
+   UPDATE_STAFF,
+   UPDATE_DATE,
+   SHARE_RULE_TYPE_PRI,
+   SHARE_RULE_TYPE_ID,
+   CREATE_STAFF,
+   CREATE_DATE,
+   EXP_DATE,
+   OBJ_ID,
+   OBJ_TYPE,
+   <if test="upperAmount!=null and upperAmount!=''">
+    UPPER_AMOUNT,
+   </if>
+   <if test="lowerAmount!=null and lowerAmount!=''">
+     LOWER_AMOUNT,
+   </if>
+   STATUS_CD,
+   STATUS_DATE
+)
+VALUES
+(
+		#{shareRuleId},
+		#{acctBalanceId},
+		NULL,
+		NULL,
+		#{shareRuleTypePri},
+		#{shareRuleTypeId},
+		24316,
+		NOW(),
+		str_to_date(#{expDate},'%Y-%m-%d %H:%i:%s'),
+		#{objId},
+		#{objType},
+		<if test="upperAmount!=null and upperAmount!=''">
+    	#{upperAmount},
+        </if>
+		<if test="lowerAmount!=null and lowerAmount!=''">
+    	#{lowerAmount},
+        </if>
+		1,
+		NOW()
+)
+</insert>
+<!-- 插入余额共享规则类型 -->
+<insert id="PayServiceInsBalanceShareRuleType"  parameterType="map">
+insert into balance_share_rule_type
+		(
+		SHARE_RULE_TYPE_ID,
+		SHARE_RULE_TYPE_NAME,
+		STATUS_CD,
+		CREATE_STAFF,			
+		CREATE_DATE,		
+		STATUS_DATE		
+		)
+		values
+		(
+		#{shareRuleTypeID},
+		#{shareRuleTypeName},
+		#{statusCD},
+		24316,
+		NOW(),
+		NOW()
+		)
+</insert>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 调账单 ACCT_ITEM_ADJUST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryAcctItemAdjust" parameterType="map" resultType="hashMap">
+SELECT 
+    adjust_item_id,
+	adjust_acct_item_id,
+	acct_id,
+	prod_inst_id,
+	case  when adjust_type=1 then "费用项"
+	      when adjust_type=2 then "非费用项" 
+	end adjust_type,
+	amount,
+	REMARK,
+	STAFF_ID,	
+	case when status_cd=1 then "未处理"
+	     when status_cd=2 then "已处理"
+	     when status_cd=3 then "作废"
+	     when status_cd=4 then "处理失败"
+    end	 status_cd,
+	DATE_FORMAT(CREATED_DATE,'%Y-%m-%d %H:%i:%s')  CREATED_DATE
+from acct_item_adjust
+</select>
+
+<select id="PayServiceQryAcctItemAdjustById" parameterType="map" resultType="hashMap">
+SELECT 
+    adjust_item_id,
+	adjust_acct_item_id,
+	acct_id,
+	prod_inst_id,
+	case  when adjust_type=1 then "费用项"
+	      when adjust_type=2 then "非费用项" 
+	end adjust_type,
+	amount,
+	REMARK,
+	STAFF_ID,
+	case when status_cd=1 then "未处理"
+	     when status_cd=2 then "已处理"
+	     when status_cd=3 then "作废"
+	     when status_cd=4 then "处理失败"
+    end	 status_cd,
+	DATE_FORMAT(CREATED_DATE,'%Y-%m-%d %H:%i:%s')
+    as CREATED_DATE
+from acct_item_adjust
+WHERE  adjust_item_id=#{adjustItemId}
+</select>
+
+<insert  id="PayServiceInsAcctItemAdjust"  parameterType="map">
+INSERT INTO acct_item_adjust
+(
+	adjust_item_id,
+	adjust_acct_item_id,
+	acct_id,
+	prod_inst_id,
+	billing_cycle_id,
+	acct_item_type_id,
+	item_source_id,
+	adjust_type,
+	amount,
+	status_cd,
+	status_date,
+	<if test="remark!=null and remark!=''">
+	REMARK,
+	</if>
+	CREATED_DATE,
+	STAFF_ID,
+	<if test="offerId!=null and remark!=''">
+	OFFER_ID
+	</if>
+	
+)
+VALUES
+(
+    #{adjustItemId},
+	#{adjustAcctItemId},
+	#{acctId},
+	#{prodInstId},
+	#{billingCycleId},
+	#{acctItemTypeId},
+	#{itemSourceId},
+	#{adjustType},
+	#{amount},
+	1,
+	NOW(),
+	<if test="remark!=null and remark!=''">
+	#{remark},
+	</if>
+	NOW(),
+	24316,
+	<if test="offerId!=null and remark!=''">
+	#{offerId}
+	</if>
+	
+)
+</insert>
+
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 余额类型：静态 BALANCE_TYPE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryBalanceType" parameterType="map" resultType="hashMap"> 
+SELECT
+		BALANCE_TYPE_ID,
+		PRIORITY,
+		BALANCE_TYPE_NAME,
+		ALLOW_DRAW,
+		INV_OFFER,
+		IF_EARNING,
+		IF_PAYOLD,
+		IF_SAVEBACK,
+		IF_PRINCIPAL,
+		OPER_FLAG,
+		TRANS_FLAG
+from 
+balance_type
+</select>
+<select id="PayServiceQryBalanceTypeById" parameterType="map" resultType="hashMap"> 
+SELECT
+		BALANCE_TYPE_ID,
+		PRIORITY,
+		BALANCE_TYPE_NAME,
+		ALLOW_DRAW,
+		INV_OFFER,
+		IF_EARNING,
+		IF_PAYOLD,
+		IF_SAVEBACK,
+		IF_PRINCIPAL,
+		OPER_FLAG,
+		TRANS_FLAG
+from 
+        balance_type
+WHERE   BALANCE_TYPE_ID=#{balanceTypeId}
+</select>
+
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 税目配置表 TAX_ITEM +税率配置表TAX_RATE_CONFIG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<select id="PayServiceQryTaxItemAndConfig" parameterType="map" resultType="hashMap"> 
+select 
+			a.prod_id,
+			a.tax_type,
+			b.tax_item_name,
+			b.tax_item_code,
+			b.tax_rate,
+			b.region_id,
+			DATE_FORMAT(a.EFF_DATE,'%Y-%m-%d %H:%i:%s')
+			as EFF_DATE,
+			DATE_FORMAT(a.EXP_DATE,'%Y-%m-%d %H:%i:%s')
+			as EXP_DATE
+		
+from tax_rate_config a, tax_item b
+where a.tax_item_id=b.tax_item_id
+</select>
+<select id="PayServiceQryTaxItemAndConfigById" parameterType="map" resultType="hashMap"> 
+select 
+			a.prod_id,
+			a.tax_type,
+			b.tax_item_name,
+			b.tax_item_code,
+			b.tax_rate,
+			b.region_id,
+			DATE_FORMAT(a.EFF_DATE,'%Y-%m-%d %H:%i:%s')
+			as EFF_DATE,
+			DATE_FORMAT(a.EXP_DATE,'%Y-%m-%d %H:%i:%s')
+			as EXP_DATE
+		
+from tax_rate_config a, tax_item b
+where a.tax_item_id=b.tax_item_id
+AND b.tax_rate_config_id=#{taxRateConfig}
+</select>
+<insert  id="PayServiceInsTaxItem"  parameterType="map">
+INSERT INTO tax_item()
+VALUES
+(
+	#{taxItemId},
+	#{taxItemName},
+	#{taxItemCode},
+	#{taxRate},
+	#{regionId},
+	#{remark},
+	1,
+	24316,
+	NULL,
+	NOW(),
+	NULL,
+	NOW()
+)
+</insert>
+<insert  id="PayServiceInsTaxRateConfig"  parameterType="map">
+INSERT INTO tax_rate_config()
+VALUES
+(
+	#{taxRateConfigId},
+	#{taxItemId},
+	#{prodId},
+	#{acctItemTypeId},
+	#{taxType},
+	NOW(),
+	str_to_date(#{expDate},'%Y-%m-%d %H:%i:%s'),
+	#{regionId},
+	1,
+	24316,
+	NULL,
+	NOW(),
+	NULL,
+	NOW()
+)
+</insert>
+
+<!--~~~~~~~~~~~BALANCE_SPECIAL_PAYMENT 专款专用详情：静态   +专款专用详情描述：静态~~~~~~~~~~~~-->
+<select id="PayServiceQryBalanceSpecialPaymentAndDesc" parameterType="map" resultType="hashMap"> 
+SELECT 
+			a.SPE_PAYMENT_DET_ID,
+			b.SPE_PAYMENT_DESC,
+			a.PARTNER_ID,
+			a.PROD_ID,
+			a.ACCT_ITEM_GROUP_ID,
+			a.ACCT_ITEM_PAYMENT_TYPE,
+			a.REGION_ID,
+			DATE_FORMAT(a.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,		
+			a.CREATE_STAFF
+FROM balance_special_payment a,balance_special_payment_desc b
+where a.SPE_PAYMENT_ID=b.SPE_PAYMENT_ID
+</select>
+
+<select id="PayServiceQryBalanceSpecialPaymentAndDescById" parameterType="map" resultType="hashMap">
+SELECT 
+			a.SPE_PAYMENT_DET_ID,
+			b.SPE_PAYMENT_DESC,
+			a.PARTNER_ID,
+			a.PROD_ID,
+			a.ACCT_ITEM_GROUP_ID,
+			a.ACCT_ITEM_PAYMENT_TYPE,
+			a.REGION_ID,			
+			DATE_FORMAT(a.CREATE_DATE,'%Y-%m-%d %H:%i:%s') CREATE_DATE,
+			a.CREATE_STAFF
+FROM balance_special_payment a,balance_special_payment_desc b
+where a.SPE_PAYMENT_ID=b.SPE_PAYMENT_ID
+AND a.SPE_PAYMENT_DET_ID=#{spePaymentDetId}
+</select>
+<insert id="PayServiceInsBalanceSpecialPayment" parameterType="map" >
+INSERT INTO balance_special_payment()
+VALUES
+(
+   #{spePaymentDetId},
+   #{spePaymentId},
+   #{prodId},
+   NULL,
+   NOW(),
+   24316,
+   NOW(),
+   #{regionId},
+   #{acctItemPaymentType},
+   #{acctItemGroupId},
+   1,
+   NOW(),
+   #{partnerId}
+)
+
+</insert>
+<insert id="PayServiceInsBalanceSpecialPaymentDesc" parameterType="map" >
+INSERT INTO balance_special_payment_desc()
+VALUES
+(
+	#{spePaymentId},
+    #{spePaymentDesc},
+    1,
+	24316,
+	NULL,
+	NOW(),
+	NOW(),
+	NULL
+)
+
+</insert>
+
+
+<select id="PayServiceQryAcctBalance" parameterType="map" resultType="hashMap">
+SELECT       a.ACCT_BALANCE_ID,
+			 b.ACCT_NAME,
+			 b.ACCT_CD,
+			 c.BALANCE_TYPE_NAME,
+			 a.BALANCE/100 BALANCE,
+			 a.RESERVE_BALANCE/100 RESERVE_BALANCE,
+			 case 
+			 when a.CYCLE_TYPE=1 then "总额封顶"
+			 when a.CYCLE_TYPE=2 then "余额对象封顶"
+			 when a.CYCLE_TYPE=3 then "帐户封顶"
+			 when a.CYCLE_TYPE=4 then "服务封顶"
+			 when a.CYCLE_TYPE=5 then "消费比例封顶"
+			 end CYCLE_TYPE,
+			 a.CYCLE_UPPER,
+			 a.CYCLE_LOWER,
+			 case 
+			 when a.SHARE_RULE_FLAG =0 then "否"
+			 when a.SHARE_RULE_FLAG =1 then "是"
+			 end SHARE_RULE_FLAG,
+			 a.EFF_DATE,
+			 a.EXP_DATE,
+			 case
+			 when a.STATUS_CD=1 then "有效"
+			 when a.STATUS_CD=2 then "无效"
+			 when a.STATUS_CD=3 then "已归档"
+			 when a.STATUS_CD=4 then "未激活"
+			 when a.STATUS_CD=5 then "冻结"
+			 end STATUS_CD
+from acct_balance a, account b, balance_type c
+where a.ACCT_ID=b.ACCT_ID AND a.BALANCE_TYPE_ID=c.BALANCE_TYPE_ID
+AND  a.ACCT_ID=#{AccountDetId}
+</select>
+
+<select id="PayServiceQryPayment" parameterType="map" resultType="hashMap">
+SELECT       a.payment_id,
+			 c.PAYMENT_METHOD_NAME,
+			 case
+			 when a.operation_type=1 then "销账"
+			 when a.operation_type=2 then "预存"
+			 when a.operation_type=3 then "预出发票"
+			 when a.operation_type=4 then "押金"
+			 when a.operation_type=5 then "余额提取"
+			 when a.operation_type=6 then "一次性费用收取"
+			 end operation_type,
+			 a.amount/100 amount,
+			 DATE_FORMAT(a.PAYMENT_DATE,'%Y-%m-%d %H:%i:%s') PAYMENT_DATE,
+			 a.deposit_amount/100 deposit_amount,
+			 a.acc_num,
+			 case 
+			 when a.status_cd=1 then "生成"
+			 when a.status_cd=2 then "销账"
+			 when a.status_cd=3 then "冲正"
+			 when a.status_cd=4 then "被冲正"
+			 when a.status_cd=5 then "预出发票"
+			 when a.status_cd=6 then "预出发票被冲正"
+			 when a.status_cd=7 then "预出发票冲正"
+			 end status_cd,
+			 a.prod_inst_id,
+			 b.ACCT_NAME,
+			 d.channel_name
+from payment a,account b,payment_method c, payment_channel d
+where a.acct_id=b.ACCT_ID AND a.payment_method=c.PAYMENT_METHOD 
+AND a.payment_channel_id=d.payment_channel_id
+AND  a.ACCT_ID=#{AccountDetId}
+</select>
+
+<select id="PayServiceQryBill" parameterType="map" resultType="hashMap">
+SELECT 
+      a.bill_id ,
+	  a.payment_id,
+      a.acc_num,
+	  a.prod_inst_id,
+	  a.amount/100 amount,
+	  a.late_fee/100 late_fee,
+	  a.derate_late_fee/100 derate_late_fee,
+      a.balance/100 balance,
+	  a.last_change/100 last_change,
+   	  a.cur_change/100 cur_change,
+      c.PAYMENT_METHOD_NAME,
+	  b.ACCT_NAME,
+      case 
+			 when a.status_cd=1 then "生成"
+			 when a.status_cd=2 then "销账"
+			 when a.status_cd=3 then "冲正"
+			 when a.status_cd=4 then "被冲正"
+			 when a.status_cd=5 then "预出发票"
+			 when a.status_cd=6 then "预出发票被冲正"
+			 when a.status_cd=7 then "预出发票冲正"
+			 end status_cd
+from  bill a, account b, payment_method c
+where a.payment_method =c.PAYMENT_METHOD
+AND a.acct_id=b.ACCT_ID AND a.payment_method=c.PAYMENT_METHOD
+AND  a.ACCT_ID=#{AccountDetId}
+</select>
+
+<!-- 发票 -->
+<select id="PayserviceQryAcctInvoice" parameterType="map" resultType="hashMap">
+select 
+      a.INVOICE_ID,
+	  a.AMOUNT/100 AMOUNT,
+	  a.BILLING_CYCLE_ID,
+      b.PAYMENT_ID,
+      case 
+      when c.OPER_TYPE=1 then "打印"
+      when c.OPER_TYPE=2 then "作废"
+      end OPER_TYPE
+      ,
+	  a.PRINT_COUNT/100 PRINT_COUNT,
+	  DATE_FORMAT(a.PRN_DATE,'%Y-%m-%d %H:%i:%s') PRN_DATE,
+	  d.INVOICE_TYPE_NAME,			
+case 
+		 WHEN	a.STATUS_CD =1 then "有效"
+		 WHEN a.STATUS_CD =2 then "作废"
+end STATUS_CD	 			
+from  invoice a,inv_payment_rel b,inv_oper_record c, invoice_type d
+where a.OPER_ID=c.OPER_ID
+AND   b.OPER_ID=c.OPER_ID
+AND   c.INVOICE_TYPE_ID=d.INVOICE_TYPE_ID
+AND    c.ACCT_ID=#{acctID}
+</select>
+
+<select id="PayserviceQryNorInvoice" parameterType="map" resultType="hashMap">
+SELECT  
+            a.INVOICE_NUM,
+			a.INVOICE_CODE,
+			a.AMOUNT/100 AMOUNT,
+			a.PROD_INST_ID,
+			b.INVOICE_ITEM_ID,
+			b.ITEM_NAME,
+			b.ITEM_VALUE/100 ITEM_VALUE
+			
+from invoice a, invoice_detail b
+WHERE a.INVOICE_ID=b.INVOICE_ID
+AND a.INVOICE_ID=#{invoiceId}
+</select>
+
+<select id="PayserviceQrySpeInvoice" parameterType="map" resultType="hashMap">
+SELECT   
+			a.INVOICE_NUM,
+			a.INVOICE_CODE,
+			a.PROD_INST_ID,
+			b.TAXER_NAME,
+			b.SELLER_NAME,
+			c.TAX_ITEM_NAME,
+            a.AMOUNT/100 AMOUNT,
+			c.TAX
+from  invoice a, vat_invoice b, vat_invoice_detail c
+where  a.INVOICE_ID=b.INVOICE_ID
+AND b.VAT_INVOICE_ID=c.VAT_INVOICE_ID
+AND a.INVOICE_ID=#{invoiceId}
+</select>
+
+
+
+
+
+
+
+
+
+
+
+<select id="qurProInvoice" resultType="hashMap">
+	select b.VAT_INVOICE_ID,b.TAXER_NAME,b.SELLER_NAME,b.CREATE_DATE,c.TAX_ITEM_NAME,c.QUANTITY,c.TAX
+	from invoice a,vat_invoice b,vat_invoice_detail c
+	where a.INVOICE_ID=b.INVOICE_ID
+	and b.VAT_INVOICE_ID=c.VAT_INVOICE_ID
+	<if test="vat_Invoice_id!=''">
+		and b.VAT_INVOICE_ID=#{vat_Invoice_id}
+	</if>
+</select>
+
+<select id="qurOperInvoice" resultType="hashMap">
+	select b.OPER_ID,b.OPER_TYPE,c.INVOICE_TYPE_NAME,d.AMOUNT
+	from invoice a,inv_oper_record b,invoice_type c,inv_payment_rel d
+	where a.OPER_ID=b.OPER_ID
+	and b.INVOICE_TYPE_ID=c.INVOICE_TYPE_ID
+	and b.OPER_ID=d.OPER_ID
+	<if test="oper_id!=''">
+		and b.OPER_ID=#{oper_id}
+	</if>
+</select>
+
+<select id="qurOperId" resultType="hashMap">
+	select OPER_ID from invoice where INVOICE_ID = #{INVOICE_ID}
+</select>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~账本记录查询~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<select id="qurAcctBalLog" parameterType="Map"  resultType="hashMap">
+select ACCT_BALANCE_ID,OPER_INCOME_ID,SRC_AMOUNT/100 SRC_AMOUNT,OPER_PAYOUT_ID,PAYOUT_AMOUNT/100 PAYOUT_AMOUNT,BILLING_CYCLE_ID from acct_balance_log
+   where ACCT_BALANCE_ID=#{ACCT_BALANCE_ID}
+</select>
+
+<select id="qurAcctBalLogDeatil" parameterType="Map"  resultType="hashMap">
+select  
+      a.ACCT_ID,
+      b.SHARE_RULE_ID,
+     b.UPPER_AMOUNT/100 as UPPER_AMOUNT ,
+     b.LOWER_AMOUNT/100 as LOWER_AMOUNT,
+     a.STATUS_CD,
+     c.SHARE_RULE_TYPE_NAME
+      
+from acct_balance a,balance_share_rule b,balance_share_rule_type c
+ where
+ b.SHARE_RULE_TYPE_ID = c.SHARE_RULE_TYPE_ID 
+ and a.ACCT_BALANCE_ID = b.ACCT_BALANCE_ID
+ and a.ACCT_BALANCE_ID=#{ACCT_BALANCE_ID}
+</select>
+
+<select id="qurBalPayout" parameterType="Map"  resultType="hashMap">
+	select case a.OPER_TYPE when '1' then '提取'
+when '2' then '销帐'
+when '3' then '转帐'
+when '4' then '调帐'
+when '5' then 'OCS扣款'
+when '6' then 'OCS补款'
+when '7' then '冲正'
+when '8' then '被冲正'
+when '9' then '下限扣除' end OPER_TYPE,a.OPER_PAYOUT_ID,a.BALANCE/100 BALANCE,b.BALANCE/100 AMOUNT  ,a.PAYOUT_DESC
+	from balance_payout a, balance_acct_item_payed b where a.oper_payout_id=b.oper_payout_id
+	and a.ACCT_BALANCE_ID=#{ACCT_BALANCE_ID}
+</select>
+
+
+<select id="qurBalSource" parameterType="Map"  resultType="hashMap">
+	select a.OPER_INCOME_ID,case a.OPER_TYPE
+when '1' then '存（收入）'
+when '2' then '转（收入）'
+when '3' then '补（收入）'
+when '4' then '冲正'
+when '5' then '调帐' end OPER_TYPE,a.AMOUNT/100 AMOUNT,a.BALANCE/100 BALANCE,b.BALANCE_SOURCE_TYPE_DESC
+	from balance_source a left join balance_source_type b on a.BALANCE_SOURCE_TYPE_ID=b.BALANCE_SOURCE_TYPE_ID
+	where a.ACCT_BALANCE_ID=#{ACCT_BALANCE_ID}
+</select>
+
+
+
+<select id="QueryAcctItemType" parameterType="Map"  resultType="hashMap">
+select ACCT_ITEM_TYPE_ID id,name text from ACCT_ITEM_TYPE;
+</select>
+<select id="QueryAcctItemSource" parameterType="Map"  resultType="hashMap">
+select ITEM_SOURCE_ID id ,NAME text from ACCT_ITEM_SOURCE;
+</select>
+<select id="QueryAcctItemGroup" parameterType="Map"  resultType="hashMap">
+select ACCT_ITEM_GROUP_ID id,ACCT_ITEM_GROUP_NAME text from ACCT_ITEM_GROUP;
+</select>
+
+<select id="QueryAcctItemList" parameterType="Map"  resultType="hashMap">
+select 
+case c.GROUP_TYPE when'1' then '全局'
+when'2' then '计费'
+when'3' then '帐务'
+when'4' then '信控' end GROUP_TYPE,
+c.ACCT_ITEM_GROUP_NAME,
+case d.ITEM_SOURCE_TYPE
+when'1' then '详单'
+when'2' then '周期性费用'
+when'3' then '帐务优惠'
+when'4' then '一次性费用'
+when'5' then '调帐'
+when'6' then '补收补退' end ITEM_SOURCE_TYPE,
+b.NAME NAME,
+e.COMMENTS COMMENTS,
+case b.IF_ADJUST  when '0' then '否' when '1' then '是' end IF_ADJUST
+from ACCT_ITEM_GROUP_MEMBER a, ACCT_ITEM_TYPE b,ACCT_ITEM_GROUP c , ACCT_ITEM_SOURCE d ,ACCT_ITEM_CLASS e
+where a.ACCT_ITEM_TYPE_ID=b.ACCT_ITEM_TYPE_ID
+and a.ACCT_ITEM_GROUP_ID=c.ACCT_ITEM_GROUP_ID
+and a.ITEM_SOURCE_ID=d.ITEM_SOURCE_ID
+and b.ACCT_ITEM_CLASS_ID=e.ACCT_ITEM_CLASS_ID
+<if test="ACCT_ITEM_TYPE!='' and ACCT_ITEM_TYPE!=null">
+  and a.ACCT_ITEM_TYPE_ID=#{ACCT_ITEM_TYPE}
+</if>
+<if test="ACCT_ITEM_GROUP!='' and ACCT_ITEM_GROUP!=null">
+  and a.ACCT_ITEM_GROUP_ID=#{ACCT_ITEM_GROUP}
+</if>
+<if test="ACCT_ITEM_SOURCE!='' and ACCT_ITEM_SOURCE!=null">
+  and a.ITEM_SOURCE_ID=#{ACCT_ITEM_SOURCE}
+</if>
+</select>
+
+
+<select id="QueryAcctItemList11" parameterType="Map"  resultType="hashMap">
+select i.BILL_ITEM_TYPE_ID,i.BILL_PARENT_ID, r.CONTENT ,
+(case
+when r.PRINT_CONDITION = '1' then '打印变量'
+when r.PRINT_CONDITION = '2' then '不打印变量' 
+end)as PRINT_CONDITION ,v.BILL_VARIABLE_NAME, f.BILL_ITEM_TYPE_CAPTION,f.PRINT_ORDER, it.FORMAT_NAME
+from BILL_ITEM i LEFT JOIN BILL_REMARK  r  
+on r.BILL_REMARK_id = i.BILL_REMARK_id 
+left join BILL_VARIABLE v
+on r.BILL_VARIABLE_id = v.BILL_VARIABLE_id
+left join BILL_FORMAT_ITEM f on i.BILL_ITEM_TYPE_ID = f.BILL_ITEM_TYPE_ID
+left join BILL_FORMAT it on it.BILL_FORMAT_ID = f.BILL_FORMAT_ID
+
+</select>
+
+<insert id="INSERT_ACCT_ITEM_GROUP_MEM" parameterType="Map">
+insert into ACCT_ITEM_GROUP_MEMBER  values(
+#{ACCT_ITEM_GROUP_MEM_ID},#{ACCT_ITEM_TYPE},#{ACCT_ITEM_GROUP},#{ACCT_ITEM_SOURCE},1,'24316','24316',now(),now(),now())
+</insert>
+<select id="QueryAcctItemList22" parameterType="Map"  resultType="hashMap">
+select i.BILL_ITEM_TYPE_ID,i.ACCT_ITEM_TYPE_ID,t.name as ACCT_ITEM_TYPE, s.name as ACCT_ITEM_SOURCE
+from BILL_ACCT_ITEM i
+left join ACCT_ITEM_TYPE t on i.ACCT_ITEM_TYPE_id = t.ACCT_ITEM_TYPE_id 
+left join ACCT_ITEM_SOURCE s on i.ITEM_SOURCE_ID = s.ITEM_SOURCE_ID  
+where i.BILL_ITEM_TYPE_ID = #{typeId}
+
+</select>
+
+<select id="PayServiceQryBillOfferTypeOfferRel" parameterType="Map"  resultType="hashMap">
+
+
+</select>
+
+
+<select id="QueryDepositType" parameterType="Map"  resultType="hashMap">
+   select DEPOSIT_TYPE_ID id,DEPOSIT_TYPE_NAME text from DEPOSIT_TYPE;
+</select>
+
+<select id="querydepositListQ" parameterType="Map"  resultType="hashMap">
+select 
+a.DEPOSIT_BALANCE_ID,
+a.ACCT_ID,
+a.ORI_AMOUNT/100 ORI_AMOUNT ,
+a.AMOUNT/100 AMOUNT,
+DATE_FORMAT(a.CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+DATE_FORMAT(a.ALLOW_PAEY_DATE,'%Y-%m-%d') ALLOW_PAEY_DATE,
+DATE_FORMAT(a.EFF_DATE,'%Y-%m-%d') EFF_DATE,
+DATE_FORMAT(a.EXP_DATE,'%Y-%m-%d') EXP_DATE,
+b.DEPOSIT_TYPE_NAME,
+c.DELAY_DAY,
+case c.IF_SAVE_BALANCE when '0' then '否' when '1' then '是' end IF_SAVE_BALANCE
+from DEPOSIT a,DEPOSIT_TYPE b,DEPOSIT_PAY_RULE c
+where a.DEPOSIT_TYPE_ID=b.DEPOSIT_TYPE_ID
+and b.DEPOSIT_TYPE_ID=c.DEPOSIT_TYPE_ID
+<if test="ACCT_ID!='' and ACCT_ID!=null">
+  and a.ACCT_ID=#{ACCT_ID}
+</if>
+<if test="DEPOSIT_TYPE_ID!='' and DEPOSIT_TYPE_ID!=null">
+  and a.DEPOSIT_TYPE_ID=#{DEPOSIT_TYPE_ID}
+</if>
+</select>
+
+
+<select id="querydepositListDetailQ" parameterType="Map"  resultType="hashMap">
+select 
+a.DEPOSIT_SO_DETAIL_ID,
+b.DEPOSIT_TYPE_NAME,
+a.DEPOSIT_BALANCE_ID,
+a.ACCT_ID,
+case a.DEPOSIT_OPER_TYPE when '1' then '押金收入' when '2' then '押金提现' when '3' then '押金转预存' end  DEPOSIT_OPER_TYPE,
+a.BILLING_CYCLE_ID,
+a.AMOUNT/100 as amount,
+a.CUST_ORDER_NBR,
+a.STAFF_ID,
+a.ORG_ID,
+DATE_FORMAT(a.CREATE_DATE,'%Y-%m-%d') CREATE_DATE,
+a.REL_OPER_INCOME_ID
+from DEPOSIT_TRADE_DETAIL a,DEPOSIT_TYPE b
+where a.DEPOSIT_TYPE_ID=b.DEPOSIT_TYPE_ID
+and a.DEPOSIT_BALANCE_ID=#{DEPOSIT_BALANCE_ID}
+</select>
+<select id="QueryBillOfferType" parameterType="Map"  resultType="hashMap">
+SELECT 
+`PREFER_TYPE_ID` as `preferTypeId`
+,`NAME` as `name`
+,`PREFER_TYPE_PRINT_PRIORITY` as `preferTypePrintPriority`
+,`REGION_ID` as `regionId`
+,`REMARK` as `remark`
+,case `STATUS_CD` when '1000' then '有效' when '1100' then '无效' end as `statusCd`
+,date_format(`CREATE_DATE`,'%Y-%m-%d')  as `createDate`
+FROM BILL_OFFER_TYPE
+</select>
+<!-- 账目 -->
+
+<select id="iasAcctItem" resultType="hashMap">
+select 
+a.acct_item_id,
+e.`name` itmeSourceName,
+a.billing_cycle_id,
+a.amount/100 as amount,
+a.HAD_INVOICE_AMOUNT/100 as HAD_INVOICE_AMOUNT,
+a.NO_INVOICE_AMOUNT/100 as NO_INVOICE_AMOUNT,
+b.billing_cycle_type_id,
+a.bill_id,
+d.PAYMENT_METHOD_NAME,
+f.`name` itemTypeName,
+case 
+when a.status_cd=1 then "未缴费"
+when a.status_cd=2 then "已缴清 "
+end status_cd
+from acct_item a ,billing_cycle b,billing_cycle_type c, payment_method d ,acct_item_source e, acct_item_type f
+case a.payment_method  when '100000' then '现金'
+when '100001' then '平安万里通现金'
+when '110000' then '银行'
+when '110100' then 'POS(含信用卡/借记卡)'
+end payment_method,
+c.create_date,
+d.name itemTypeName,
+case a.status_cd when '1' then '未销账' when '2' then '已销账' end  status_cd,
+e.name itmeSourceName
+from acct_item a ,billing_cycle b,billing_cycle_type c,acct_item_type d,acct_item_source e
+>>>>>>> .r114198
+where a.billing_cycle_id=b.billing_cycle_id
+     and b.billing_cycle_type_id=c.billing_cycle_type_id
+     and a.payment_method=d.PAYMENT_METHOD
+     and a.item_source_id=e.item_source_id
+     and a.acct_item_type_id=f.acct_item_type_id
+     and a.acct_item_id=#{ACCT_ITEM_ID}
+    
+     and a.acct_item_type_id=d.acct_item_type_id
+     and a.item_source_id=e.item_source_id
+  and a.ACCT_ID=#{ACCT_ITEM_ID}
+</select>
+
+<select id="iasAcctItemQuery" resultType="hashMap">
+	select 
+acct_item_id,
+item_source_id,
+billing_cycle_id,
+acct_id,
+prod_inst_id,
+acct_item_type_id,
+offer_inst_id
+from acct_item 
+where 
+      ACCT_ITEM_ID=#{ACCT_ITEM_ID}
+</select>
+
+<update id="iasAcctItemU" parameterType="Map"  >
+	update acct_item  set 
+	<if test="changeflag==1">
+	 amount=(amount+${CHARGE}*100)
+</if>
+<if test="changeflag==2">
+	 amount=(amount-${CHARGE}*100)
+</if>
+	 WHERE acct_item_id=#{ACCT_ITEM_ID}  
+</update>
+
+
+<insert id="iasAcctItemUT" parameterType="map" >
+INSERT INTO `acct_item_adjust` (`adjust_item_id`, `adjust_acct_item_id`, `acct_id`, `prod_inst_id`, `billing_cycle_id`, 
+`acct_item_type_id`, `item_source_id`, `adjust_type`, `amount`, `status_cd`, `status_date`, `REMARK`, `CREATED_DATE`, `STAFF_ID`, `OFFER_ID`)
+ VALUES (#{adjust_item_id}, #{ACCT_ITEM_ID}, #{acct_id}, #{prod_inst_id}, #{billing_cycle_id}, 
+ #{acct_item_type_id}, #{item_source_id}, #{ADJUST_TYPE},#{CHARGE}*100, '1', now(), #{ADJUST_DESC}, now(), '24316', #{offer_inst_id});
+</insert>
+
+<select id="QueryBillOfferTypeOfferRel" parameterType="map"  resultType="hashMap">
+   select 
+a.`RECORD_ID` as `recordId`
+,b.name 
+,a.`PREFER_SPEC_ID` as `preferSpecId`
+,a.`PREFER_SPEC_NAME` as `preferSpecName`
+,a.`LAN_ID` as `lanId`
+,case a.`IF_PAY_YEAR` when '0' then '否' when '1' then '是' end `ifPayYear`
+,case a.`IF_SHOW_MEMBER` when '0' then '否' when '1' then '是' end `ifShowMember`
+,a.`PREFER_TYPE_PRINT_PRIORITY` as `preferTypePrintPriority`
+,a.`REMARK` as `remark`
+,case a.`STATUS_CD` when '1' then '有效' when '2' then '无效' end `statusCd`
+,date_format(a.`CREATE_DATE`,'%Y-%m-%d')  as `createDate`
+from BILL_OFFER_TYPE_OFFER_REL a,
+BILL_OFFER_TYPE b
+where a.`PREFER_TYPE_ID`=b.`PREFER_TYPE_ID`
+and a.`RECORD_ID`=#{recordId};
+</select>
+
+
+
+<insert id="InsertBillOfferTypeOfferRel" parameterType="Map">
+insert into BILL_OFFER_TYPE_OFFER_REL (
+record_Id
+<if test="preferTypeId != null">
+	,`PREFER_TYPE_ID`
+</if>
+<if test="preferSpecId != null">
+	,`PREFER_SPEC_ID`
+</if>
+<if test="preferSpecName != null">
+	,`PREFER_SPEC_NAME`
+</if>
+<if test="lanId != null">
+	,`LAN_ID`
+</if>
+<if test="ifPayYear != null">
+	,`IF_PAY_YEAR`
+</if>
+<if test="ifShowMember != null">
+	,`IF_SHOW_MEMBER`
+</if>
+<if test="preferTypePrintPriority != null">
+	,`PREFER_TYPE_PRINT_PRIORITY`
+</if>
+<if test="remark != null">
+	,`REMARK`
+</if>
+	,`STATUS_CD`
+<if test="createStaff != null">
+	,`CREATE_STAFF`
+</if>
+<if test="createStaff != null">
+	,`UPDATE_STAFF`
+</if>
+	,`CREATE_DATE`
+	,`UPDATE_DATE`
+	,`STATUS_DATE`
+) values (
+#{recordId}
+<if test="preferTypeId != null">
+	, #{preferTypeId}
+</if>
+<if test="preferSpecId != null">
+	, #{preferSpecId}
+</if>
+<if test="preferSpecName != null">
+	, #{preferSpecName}
+</if>
+<if test="lanId != null">
+	, #{lanId}
+</if>
+<if test="ifPayYear != null">
+	, #{ifPayYear}
+</if>
+<if test="ifShowMember != null">
+	, #{ifShowMember}
+</if>
+<if test="preferTypePrintPriority != null">
+	, #{preferTypePrintPriority}
+</if>
+<if test="remark != null">
+	, #{remark}
+</if>
+	, 1000
+<if test="createStaff != null">
+	, #{createStaff}
+</if>
+<if test="createStaff != null">
+	, #{createStaff}
+</if>
+	, now()
+	, now()
+	, now()
+)
+</insert>
+
+
+
+<select id="QueryBillItemOfferRel" parameterType="Map"  resultType="hashMap">
+select 
+a.`BILL_ITEM_OFFER_REL_ID` as `billItemOfferRelId`
+,b.name
+,a.`CUST_BILL_ITEM_ID` as `custBillItemId`
+,a.`LAN_ID` as `lanId`
+,case a.`IF_LIMIT_PREFER_SPEC_ID` when '0' then '否' when '1' then '是' end `ifLimitPreferSpecId`
+,a.`REMARK` as `remark`
+,case a.`STATUS_CD` when '1' then '有效' when '2' then '无效' end `statusCd`
+,date_format(a.`CREATE_DATE`,'%Y-%m-%d')  as `createDate`
+from BILL_ITEM_OFFER_REL a,BILL_OFFER_TYPE b
+where a.`PREFER_TYPE_ID`=b.`PREFER_TYPE_ID`
+and a.`BILL_ITEM_OFFER_REL_ID`=#{billItemOfferRelId}
+</select>
+
+
+<insert id="InsertBillItemOfferRel" parameterType="Map">
+insert into BILL_ITEM_OFFER_REL (
+bill_Item_Offer_Rel_Id
+<if test="preferTypeId != null">
+	,`PREFER_TYPE_ID`
+</if>
+<if test="custBillItemId != null">
+	,`CUST_BILL_ITEM_ID`
+</if>
+<if test="lanId != null">
+	,`LAN_ID`
+</if>
+<if test="ifLimitPreferSpecId != null">
+	,`IF_LIMIT_PREFER_SPEC_ID`
+</if>
+<if test="remark != null">
+	,`REMARK`
+</if>
+	,`STATUS_CD`
+	,`STATUS_DATE`
+
+<if test="createStaff != null">
+	,`CREATE_STAFF`
+</if>
+	,`CREATE_DATE`
+<if test="createStaff != null">
+	,`UPDATE_STAFF`
+</if>
+	,`UPDATE_DATE`
+) values (
+#{billItemOfferRelId}
+<if test="preferTypeId != null">
+	, #{preferTypeId}
+</if>
+<if test="custBillItemId != null">
+	, #{custBillItemId}
+</if>
+<if test="lanId != null">
+	,#{lanId}
+</if>
+<if test="ifLimitPreferSpecId != null">
+	, #{ifLimitPreferSpecId}
+</if>
+<if test="remark != null">
+	, #{remark}
+</if>
+	, 1000
+	, now()
+<if test="createStaff != null">
+	, #{createStaff}
+</if>
+	,now()
+<if test="createStaff != null">
+	, #{createStaff}
+</if>
+	,now()
+)
+</insert>
+
+
+<select id="QueryAcctBalanceIAS" parameterType="map" resultType="hashMap">
+SELECT      
+a.ACCT_BALANCE_ID,
+b.BALANCE_TYPE_NAME,
+a.ACCT_ID,
+a.BALANCE/100 BALANCE,
+a.RESERVE_BALANCE/100 RESERVE_BALANCE,
+case 
+when a.CYCLE_TYPE=1 then "总额封顶"
+when a.CYCLE_TYPE=2 then "余额对象封顶"
+when a.CYCLE_TYPE=3 then "帐户封顶"
+when a.CYCLE_TYPE=4 then "服务封顶"
+when a.CYCLE_TYPE=5 then "消费比例封顶"
+end CYCLE_TYPE,
+case 
+when a.SHARE_RULE_FLAG =0 then "否"
+when a.SHARE_RULE_FLAG =1 then "是"
+end SHARE_RULE_FLAG,
+DATE_FORMAT(a.EFF_DATE,'%Y-%m-%d') EFF_DATE,
+DATE_FORMAT(a.EXP_DATE,'%Y-%m-%d') EXP_DATE
+from acct_balance a, balance_type b
+where   a.BALANCE_TYPE_ID=b.BALANCE_TYPE_ID
+<if test="ACCT_ID != null">
+	and  a.ACCT_ID= #{ACCT_ID}
+</if>
+</select>
+
+
+<select id="QueryAcctItemIAS" parameterType="map" resultType="hashMap">
+  select a.acct_item_id ,a.billing_cycle_id, a.amount/100 amount from ACCT_ITEM a where a.status_cd = '1' and a.acct_id = #{ACCT_ID}
+</select>
+
+
+<!-- 更新账目状态，销账类型 -->
+<update id="UpdateIasAcctItem"  parameterType="map">
+	update  acct_item  
+	 set  STATUS_CD=2           	 		
+  where ACCT_ITEM_ID=#{ACCT_ITEM_ID}
+</update>
+
+<!-- 新增付款记录 -->
+<insert id="InsertIasPayment" parameterType="Map">
+insert into PAYMENT(PAYMENT_ID,PAYMENT_METHOD,STAFF_ID,ORG_ID,OPERATION_TYPE,AMOUNT,
+PAYMENT_DATE,DEPOSIT_AMOUNT,PAYMENT_CHANNEL_ID,ACCT_ID,BUSINESS_REC_ID,INV_OFFER,PAY_CYCLE_ID,STATUS_CD,STATUS_DATE,CREATE_DATE)values
+(#{PAYMENT_ID},#{PAYMENT_METHOD},'24316','551',1,#{AMOUNT},now()
+,#{ZSAMOUNT},1,#{ACCT_ID},#{PAYMENT_ID},0,201903,2,now(),now())
+</insert>
+
+<!-- 更新账目状态，销账类型 -->
+<update id="UpdateIasAcctBalance"  parameterType="map">
+	update  ACCT_BALANCE  
+	 set  BALANCE= BALANCE+#{ZSAMOUNT},
+	 RESERVE_BALANCE=RESERVE_BALANCE+#{ZSAMOUNT}          	 		
+  where ACCT_BALANCE_ID=#{ACCT_BALANCE_ID}
+</update>
+<!-- 新增付款记录 -->
+<insert id="InsertIasBill" parameterType="Map">
+insert into BILL(BILL_ID,PAYMENT_ID,PAYMENT_METHOD,BILLING_CYCLE_ID,ACCT_ID,STAFF_ID,
+ORG_ID,AMOUNT,LATE_FEE,DERATE_LATE_FEE,BALANCE,LAST_CHANGE,
+CUR_CHANGE,CREATE_DATE,PAYMENT_DATE,STATUS_CD,STATUS_DATE) 
+values (#{BILL_ID},#{PAYMENT_ID},#{PAYMENT_METHOD},201903
+,#{ACCT_ID},24316,551,#{QfAMOUNT},0,0,0,0,0,NOW(),NOW(),2,NOW())
+</insert>
+<!-- 新增支出记录 -->
+<insert id="InsertIasBalancePayout" parameterType="Map">
+insert into BALANCE_PAYOUT(OPER_PAYOUT_ID,BILL_ID,PAYMENT_ID,OPER_TYPE,ACCT_BALANCE_ID,
+AMOUNT,BALANCE,STAFF_ID,ORG_ID,OPER_DATE,PAYOUT_DESC,STATUS_CD,STATUS_DATE) values
+(#{OPER_PAYOUT_ID},#{BILL_ID},#{PAYMENT_ID},2,#{ACCT_BALANCE_ID},
+#{QfAMOUNT},#{ZSAMOUNT},24316,551,now(),'销账',2,now())
+</insert>
+
+<!-- 新增支出账目 -->
+<insert id="InsertIasBalAcctItemPayed" parameterType="Map">
+INSERT INTO BALANCE_ACCT_ITEM_PAYED (`ACCT_ITEM_ID`, `OPER_PAYOUT_ID`, `BALANCE`, `STATUS_CD`,
+`STATUS_DATE`, `BAL_ACCT_ITEM_PAYED_ID`) 
+VALUES (#{ACCT_ITEM_ID}, #{OPER_PAYOUT_ID}, #{QfAMOUNT}, '1000', now(), #{BAL_ACCT_ITEM_PAYED_ID});
+</insert>
+
+
+<!-- 新增来源记录-->
+<insert id="InsertIasBalanceSource" parameterType="Map">
+INSERT INTO `balance_source` 
+(`OPER_INCOME_ID`, `PAYMENT_ID`,  `ACCT_BALANCE_ID`, 
+ `CUR_AMOUNT`, `STAFF_ID`, `CUR_STATUS_DATE`,
+`OPER_DATE`, `OPER_TYPE`, `SOURCE_DESC`, `BALANCE_SOURCE_TYPE_ID`, `STATUS_CD`, 
+`STATUS_DATE`, `ORG_ID`, `AMOUNT`,BALANCE) VALUES 
+(#{OPER_INCOME_ID}, #{PAYMENT_ID}, #{ACCT_BALANCE_ID},
+#{ZSAMOUNT}, 24316, now(), now(),
+ '1','前台存入', 1001,2, now(), 
+551, #{AMOUNT},#{ZSAMOUNT});
+</insert>
+
+<!-- 新增变动日志记录-->
+<insert id="InsertIasAcctBalanceLog" parameterType="Map">
+INSERT INTO `acct_balance_log` 
+(`BALANCE_LOG_ID`, `ACCT_BALANCE_ID`, `SRC_AMOUNT`, `BILLING_CYCLE_ID`, 
+`OPER_PAYOUT_ID`, `PAYOUT_AMOUNT`, `OPER_INCOME_ID`, `STATUS_CD`, `STATUS_DATE`)
+ VALUES (#{BALANCE_LOG_ID}, #{ACCT_BALANCE_ID}, #{AMOUNT}, '201903', #{OPER_PAYOUT_ID},
+ #{QfAMOUNT}, #{OPER_INCOME_ID}, 1, now());
+</insert>
+
+
+
+</mapper>

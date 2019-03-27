@@ -1,0 +1,359 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>pnt_star_parent</groupId>
+    <artifactId>pnt_star_parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>pnt_star_service</artifactId>
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<jxl.version>2.6.12</jxl.version>
+		<poi.version>3.9</poi.version>
+	</properties>
+  
+  <dependencies>
+  
+		<dependency>
+            <groupId>pnt_star_parent</groupId>
+            <artifactId>pnt_star_api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+		 <dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>dubbo</artifactId>
+		    <version>2.6.4</version>
+		</dependency>
+		<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.2.3</version>
+			</dependency>
+		<dependency>
+		    <groupId>org.apache.curator</groupId>
+		    <artifactId>curator-framework</artifactId>
+		    <version>2.12.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.curator</groupId>
+		    <artifactId>curator-client</artifactId>
+		    <version>2.12.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.curator</groupId>
+		    <artifactId>curator-recipes</artifactId>
+		    <version>2.12.0</version>
+		</dependency>		
+		 <dependency>
+	    <groupId>commons-io</groupId>
+	    <artifactId>commons-io</artifactId>
+	    <version>2.6</version>
+		</dependency>	
+		<!-- spring start -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-core</artifactId>
+    		<version>4.3.16.RELEASE</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-jdbc</artifactId>
+    		<version>4.3.16.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>4.3.16.RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-aop</artifactId>
+		    <version>4.3.16.RELEASE</version>
+		</dependency>
+		
+		<!-- spring end -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		 <!-- 安装mysql驱动包 -->	
+		 <dependency>
+		    <groupId>mysql</groupId>
+		     <artifactId>mysql-connector-java</artifactId>
+		     <version>5.1.47</version> 
+		</dependency>
+		<!--<dependency>
+		    <groupId>com.oracle</groupId>
+		     <artifactId>ojdbc</artifactId>
+		     <version>6</version>
+		</dependency> -->
+		<!-- redis start -->
+		<!-- 
+		安装dca客户端驱动包到本地仓库
+		进入到pnt_star_service/lib目录下面执行下面的命令
+		mvn install:install-file -Dfile=dca-client-2.5.jar -DgroupId=com.tydic -DartifactId=dca-client -Dversion=2.5 -Dpackaging=jar
+	 	-->
+		<dependency>
+		    <groupId>com.tydic</groupId>
+		    <artifactId>dca-client</artifactId>
+		    <version>2.5</version> 
+		</dependency>
+			
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-pool2</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>io.codis.jodis</groupId>
+		    <artifactId>jodis</artifactId>
+		    <version>0.5.1</version>
+		</dependency>
+		<!-- 如果使用了dca则需要把jedis的依赖去掉，因为dca客户端里面已经有jedis的包了，并且公司也改造过 -->
+		<!-- 如果不使用dca，使用jedis的话，需要放开 -->
+		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		    <version>2.9.0</version>
+		</dependency>
+		 
+	<!-- redis end -->
+		
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		    <version>1.1.10</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+            <!-- <scope>test</scope> -->
+        </dependency>
+        
+        <!-- restful start -->
+		<dependency>  
+            <groupId>org.jboss.resteasy</groupId>  
+            <artifactId>resteasy-jaxrs</artifactId> 
+            <version>3.5.0.Final</version> 
+        </dependency>  
+        <dependency>
+		    <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-client</artifactId>
+		    <version>3.5.0.Final</version>
+		</dependency> 
+		<dependency>
+		    <groupId>org.apache.tomcat.embed</groupId>
+		    <artifactId>tomcat-embed-core</artifactId>
+		    <version>8.0.11</version>
+		</dependency>
+			<dependency>
+			    <groupId>org.apache.tomcat.embed</groupId>
+			    <artifactId>tomcat-embed-logging-juli</artifactId>
+			    <version>8.0.11</version>
+			</dependency>
+			<dependency>
+			    <groupId>javax.validation</groupId>
+			    <artifactId>validation-api</artifactId>
+			    <version>1.1.0.Final</version>
+			</dependency>
+			
+		 <dependency>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-all</artifactId>
+		    <version>4.0.25.Final</version>
+		</dependency>
+	 
+	 
+	 <dependency>  
+         <groupId>javax.ws.rs</groupId>  
+         <artifactId>javax.ws.rs-api</artifactId>  
+         <version>2.0.1</version> 
+     </dependency>
+	<dependency>  
+	    <groupId>javax.servlet</groupId>  
+	    <artifactId>javax.servlet-api</artifactId>  
+	    <version>3.0.1</version>  
+	</dependency> 
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	    <version>4.5.5</version>
+	</dependency>
+		         <!-- restful end -->
+		         
+	<dependency>
+		    <groupId>com.jcraft</groupId>
+		    <artifactId>jsch</artifactId>
+		    <version>0.1.54</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jdom</groupId>
+		    <artifactId>jdom</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		 <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<dependency>
+		    <groupId>dom4j</groupId>
+		    <artifactId>dom4j</artifactId>
+		    <version>1.6.1</version>
+		</dependency>
+		
+		<dependency>
+	      <groupId>net.sf.ehcache</groupId>
+	      <artifactId>ehcache-core</artifactId>
+	      <version>2.4.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.jfinal/jfinal -->
+		<dependency>
+		    <groupId>com.jfinal</groupId>
+		    <artifactId>jfinal</artifactId>
+		    <version>3.3</version>
+		</dependency>
+        <!-- 切面 -->
+        <dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.7</version>
+		</dependency>
+		<!-- excel start  -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>     
+            <dependency>
+                <groupId>net.sourceforge.jexcelapi</groupId>
+                <artifactId>jxl</artifactId>
+                <version>${jxl.version}</version>
+            </dependency>
+         <!-- excel end  -->
+	</dependencies>
+
+	 <build>
+	  		<plugins>
+		  		<plugin>
+		  		 <groupId>org.apache.maven.plugins</groupId>
+		  		 <artifactId>maven-compiler-plugin</artifactId>
+		  		 <configuration>
+		  		 <source>${java.version}</source>
+		  		 <target>${java.version}</target>
+		  		 </configuration>
+		  		</plugin>
+		  
+		  	<!-- 打包插件 -->
+		  	<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>appassembler-maven-plugin</artifactId>
+        <version>2.0.0</version>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+          </execution>
+        </executions>
+         <configuration>
+                    <!-- 生成linux, windows两种平台的执行脚本 -->
+                    <platforms>
+                        <platform>windows</platform>
+                        <platform>unix</platform>
+                    </platforms>
+                    <!-- 根目录 -->
+                    <assembleDirectory>${project.build.directory}/${project.name}</assembleDirectory>
+                    <!-- 打包的jar，以及maven依赖的jar放到这个目录里面 -->
+                    <repositoryName>lib</repositoryName>
+                    <!-- 可执行脚本的目录 -->
+                    <binFolder>bin</binFolder>
+                    <!-- 配置文件的目标目录 -->
+                    <configurationDirectory>conf</configurationDirectory>
+                    <!-- 拷贝配置文件到上面的目录中 -->
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <!-- 从哪里拷贝配置文件 (默认src/main/config) -->
+                    <configurationSourceDirectory>src/main/resources</configurationSourceDirectory>
+                    <!-- lib目录中jar的存放规则，默认是${groupId}/${artifactId}的目录格式，flat表示直接把jar放到lib目录 -->
+                    <repositoryLayout>flat</repositoryLayout>
+                    <encoding>UTF-8</encoding>
+                    <logsDirectory>logs</logsDirectory>
+                    <tempDirectory>tmp</tempDirectory>
+                    <programs>
+                        <program>
+                            <!-- 启动类 -->
+                            <mainClass>com.tydic.pntstar.frame.Start</mainClass>
+                            <jvmSettings>
+                                <extraArguments>
+                                	<extraArgument>-server</extraArgument>
+                                    <extraArgument>-Xms128m</extraArgument>
+                                    <extraArgument>-Xmx2g</extraArgument>
+                                </extraArguments>
+                            </jvmSettings>
+                        </program>
+                    </programs>
+                </configuration>
+    </plugin>
+				 <plugin>
+				        <groupId>org.apache.maven.plugins</groupId>
+				        <artifactId>maven-antrun-plugin</artifactId>
+				        <version>1.8</version>
+				        <executions>
+				          <execution>
+				            <id>package_after</id>
+				            <phase>package</phase>
+				            <goals>
+				              <goal>run</goal>
+				            </goals>
+				             <configuration>
+				               	<tasks>
+				               		<!-- step1 删除jar包中的配置文件，使用conf目录里面的配置文件 -->
+				               		<unzip src="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}.jar" dest="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}"/>
+				               		<delete includeEmptyDirs="true">
+									  <fileset dir="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}/dubbo"/>
+									  <fileset dir="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}/spring"/>
+									  <fileset dir="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}/mybatis"/>
+									  <fileset file="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}/log4j.properties"/>
+									  <fileset file="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}.jar"/>
+									</delete>
+									<jar destfile="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}.jar" basedir="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}"/>
+									<delete includeEmptyDirs="true">
+									  <fileset dir="${project.build.directory}/${project.name}/lib/${project.name}-${project.version}"/>
+									</delete>
+									 
+				               	</tasks>
+				            </configuration>
+				            
+				          </execution>
+				        </executions>
+				      </plugin>
+
+    
+    	</plugins>
+		  </build>
+</project>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>积分调整</title>
+    <script type="text/javascript" src="../../js/head.js"></script>
+    <!-- 引入catui的css样式文件 -->
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catLayer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTable.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTag.css" />
+    <!-- 引入catui组件js -->
+    <script type="text/javascript" src="../../js/catui/catLayer.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTable.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTag.js"></script>
+</head>
+
+<body>
+    <div id="pointSearch" class="bgBorder mt10 pr50">
+        <h3 class="mainTitle">
+            <span class="fl titHead">查询条件</span>
+            <div class="clear"></div>
+        </h3>
+
+        <ul class="new-list mt10">
+            <li><label class="fl">本地网：</label>
+                <dl class="select fl col-5 lan-select">
+                    <dt style="color:#333;width:calc(100% + 12px);">请选择</dt>
+                    <dd id="lan_search">
+                    </dd>
+                </dl>
+                <div class="clear"></div>
+            </li>
+            <li><label class="fl">查询对象：</label>
+                <dl class="select fl col-5 query-object">
+                    <dt style="color:#333;width:calc(100% + 12px);">请选择</dt>
+                    <dd>
+                        <div><a value="1">用户号码</a></div>
+                        <div><a value="2">客户编号</a></div>
+                    </dd>
+                </dl>
+                <div class="clear"></div>
+            </li>
+            <div class="clear"></div>
+            <li><label>号码：</label><input class="lina-inp col-5" value="" id="cust_num" /></li>
+            <div class="clear"></div>
+        </ul>
+        <div class="c-btn">
+            <a class="blueBtn" id="doQuery">查询</a>
+            <a class="gy-btn2 orgBtn2 ml10" id="resetQuery">重置</a>
+        </div>
+    </div>
+    <div id="pointForm">
+        <div class="bgBorder mt10 pr50">
+            <!--业务原有信息 begin-->
+            <h3 class="mainTitle">
+                <span class="fl titHead">客户基本信息</span>
+                <div class="clear"></div>
+            </h3>
+            <ul class="new-list mt10">
+                <li><label class="w120">客户名称：</label><span class="CUST_NAME"></span></li>
+                <li><label class="w120">身份证：</label><span class="CERT_NUM"></span></li>
+                <li><label class="w120">查兑状态：</label><span class="POINT_LIMIT"></span></li>
+                <li><label class="w120">可用积分：</label><span class="POINT_BALANCE"></span></li>
+                <li><label class="w120">本月新增积分：</label><span class="AMOUNT"></span></li>
+                <li><label class="w120">年底失效积分：</label><span class="LOSE_POINT_BALANCE"></span></li>
+                <li><label class="w120">账户状态：</label><span class="STATUS_CD"></span></li>
+                <li><label class="w120">当前积分倍增系数：</label><span class="MULTIPLE"></span></li>
+                <li><label class="w120">星级等级：</label><span class="MEMBERSHIP_LEVEL"></span></li>
+                <li><label class="w120">星级状态：</label><span class="MEMBERSHIP_STATUS_CD"></span></li>
+                <li><label class="w120">星级有效期：</label><span class="EXP_DATE"></span></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+
+    <div id="pointTag" style="padding: 10px;" class="bgBorder mt10 pr50"></div>
+
+    <div class="clear"></div>
+    
+    <div id="pointAdjust" class="bgBorder mt10 pr50">
+        <div class="search-list dw-rel">
+            <dl>
+                <dt class="h42">调整原因：</dt>
+                <dd id="adjust_reason" class="mt5">
+                	<dl class="select fl col-5 select-object">
+                    <dt style="color:#333;width:calc(100%);text-align:left;">请选择</dt>
+                    <dd>
+                        <div><a value="1">活动奖励积分</a></div>
+                        <div><a value="2">积分扣减异常</a></div>
+                        <div><a value="3">积分出账异常</a></div>
+                    </dd>
+                	</dl>
+                   
+                </dd>
+                
+                <div class="clear"></div>
+            </dl>
+            <dl>
+                <dt style="height: 150px;">原因描述：</dt>
+                <dd id="reason_description">
+                    <textarea style="height:120px;margin-top:10px;" class="lina-inp col-5"></textarea>
+                </dd>
+                <div class="clear"></div>
+            </dl>
+            <dl class="h42" style="text-align:center;">
+                <dd style="margin-left: auto;margin-top:5px;margin-right:auto;width:100%">
+                    <a href="javascript:void(0);" class="blueBtn w70" style="position: relative;" id="sumbitFile">确定</a>
+                </dd>
+                <div class="clear"></div>
+            </dl>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="../../js/business/pointAdjust.js"></script>
+
+</body>
+
+</html>

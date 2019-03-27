@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- provider's application name, used for tracing dependency relationship -->
+    <dubbo:application name="pntstar-consumer"/>
+    <!-- use zk registry center to export service-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181?client=curator"/> 
+     <!--<dubbo:registry address="zookeeper://pntstar:pntstar123@192.168.128.105:2181?client=curator"/>-->
+	
+	<dubbo:reference protocol="dubbo" id="commonService"  interface="com.tydic.pntstar.service.system.CommonService"  check="false"/>
+
+	<dubbo:reference protocol="dubbo" id="loadSysDataService"  interface="com.tydic.pntstar.service.system.LoadSysDataService"  check="false"/>
+
+    <!-- 积分查询 -->
+	<dubbo:reference protocol="dubbo" id="pointQueryServiceImpl"  interface="com.tydic.pntstar.service.openapi.PointQueryService"  check="false"/>
+	<!-- 查兑状态调整 -->
+	<dubbo:reference protocol="dubbo" id="statusAdjustServiceImpl"  interface="com.tydic.pntstar.service.openapi.StatusAdjustService"  check="false"/>
+    <!-- 兑换清单列表 -->
+    <dubbo:reference protocol="dubbo" id="pointExchangeListReportServiceImpl"  interface="com.tydic.pntstar.service.openapi.PointExchangeListReportService"  check="false"/>
+    <!-- 积分返销 -->
+	<dubbo:reference protocol="dubbo" id="pointSellBackServiceImpl"  interface="com.tydic.pntstar.service.openapi.PointSellBackService"  check="false"/>
+    <!-- 积分兑换 --> 
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointExchangeService" id="pointExchangeServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+    <!-- 积分解冻 --> 
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointReleaseService" id="pointReleaseServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+    <!-- 兑换积分总览报表 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointExchOverviewReportService" id="pointExchOverviewReportImpl" protocol="dubbo" timeout="200000"   check="false"/>
+	<!-- 权益消费报表 -->
+	<dubbo:reference interface="com.tydic.pntstar.service.openapi.ClubMemberServiceService" id="clubMemberServiceServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+	<!-- 成长值查询 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.GrowingValueQueryService" id="growingValueQueryServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+    <!-- 高额预警 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointHighAlertService" id="pointHighAlertServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+    <!-- 服务消费/返销 -->
+	<dubbo:reference interface="com.tydic.pntstar.service.province.MemberServAcctService" id="memberServAcctServiceImpl" protocol="dubbo" timeout="200000"  check="false"/>
+	<!-- 积分调整 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointAdjustService" id="pointAdjustServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+    <!-- 积分清零查询 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.web.PointClearService" id="pointClearServiceImpl" protocol="dubbo" timeout="200000" check="false"/>
+    <!-- 星级统计报表 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.StarStatReportService" id="starStatReportServiceImpl" protocol="dubbo" timeout="200000" check="false"/>
+    <!-- 关键人管理 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.province.KeymanManageService" id="keymanManageServiceImpl" protocol="dubbo" timeout="200000"   check="false"/>
+	<!-- 积分总览报表 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointOverviewReportService" id="pointOverviewReportServiceImpl" protocol="dubbo" timeout="200000" check="false" />
+    <!-- 待清零积分总览报表 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointsClearOverviewReportService" id="pointsClearOverviewReportServiceImpl" protocol="dubbo" timeout="200000" check="false" />
+    <!-- 积分类型 -->
+    <dubbo:reference interface="com.tydic.pntstar.service.openapi.PointTypeService" id="pointTypeServiceImpl" protocol="dubbo" timeout="200000" check="false" />
+</beans>

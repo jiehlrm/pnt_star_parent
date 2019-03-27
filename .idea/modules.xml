@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/pnt_star_api/pnt_star_api.iml" filepath="$PROJECT_DIR$/pnt_star_api/pnt_star_api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pnt_star_parent.iml" filepath="$PROJECT_DIR$/pnt_star_parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pnt_star_service/pnt_star_service.iml" filepath="$PROJECT_DIR$/pnt_star_service/pnt_star_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pnt_star_web/pnt_star_web.iml" filepath="$PROJECT_DIR$/pnt_star_web/pnt_star_web.iml" />
+    </modules>
+  </component>
+</project>

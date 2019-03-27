@@ -1,0 +1,43 @@
+﻿{ 
+        "TcpCont":{
+		        "traceId":"20171130093547692851", --端到端调用标识
+				"flowCode":"RtBillItem",       --流程编码  
+		        "reqTime":"20171130093547"   --请求时间
+            	"rspTime":""					--响应时间
+        },
+        "SvcCont":{         
+        						
+		             "resultCode":"0", --响应码0成功
+		             "resultMsg":"",   --响应消息     
+                  	 "totalRecord":30, --总记录数
+                  	 "dataList":[			 --数据节点
+                  	 {
+                  	 	"chargeNo   ":"1",
+						"callType   ":"1",
+						"callingType":"1",
+						"callingArea":"1",
+						"calledNo   ":"1",
+						"beginTime  ":"1",
+						"duration   ":"1",
+						"basicCharge":"1",
+						"longCharge ":"1",
+						"totalCharge":"1"
+                  	 },{
+                  	 	"chargeNo   ":"2",
+						"callType   ":"2",
+						"callingType":"2",
+						"callingArea":"2",
+						"calledNo   ":"2",
+						"beginTime  ":"2",
+						"duration   ":"2",
+						"basicCharge":"2",
+						"longCharge ":"2",
+						"totalCharge":"2"
+                  	 }
+                  	 
+                  	 ]
+                  
+                  
+        			}
+    }
+}

@@ -1,0 +1,405 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*全局定义*/
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;font-family:"微软雅黑"; font-size:12px;color:#111;}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+address,cite,dfn,em,i,var,caption{font-style:normal;}
+ul,ol,li{list-style:none;}a,a img,button {cursor:pointer;}
+button,input,textarea{font-size:100%;border:none;background:none;}
+table{border-collapse:collapse;border-spacing:0;}
+img,input,spsx,button,textarea{border:0;vertical-align:middle;}
+a{text-transform:none;text-decoration:none;} 
+*{outline:0;outline:none;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+textarea{resize:none;}
+
+/*浮动*/
+.fl{float:left;}.fr{float:right;}
+.clear{clear:both;height:0px;overflow: hidden;margin:0;padding:0;font-size:0;}
+.clearfix:after{content:"lina";display:block;height:0;clear:both;visibility:hidden;}
+.clearfix{display:inline-block;}
+
+/*字号*/
+.f14{font-size:14px !important;}
+.f16{font-size:16px !important;}
+.f15{font-size:15px !important;}
+.f25{font-size:25px !important;}
+
+/*间距*/
+.mt0{ margin-top:0 !important}.mt5{margin-top:5px;}.mt10{margin-top:10px;}.mt20{margin-top:20px;}
+.mr10{margin-right:10px;}.mr0{ margin-right:0 !important;}
+.ml5{margin-left:5px}.ml10{margin-left:10px;}
+.mb10{margin-bottom:10px;}.mb0{margin-bottom:0px !important;}
+.p10{padding:10px;}.p15{padding:15px !important;}
+.pb0{ padding-bottom:0 !important}
+.ptb15{ padding-top:15px !important; padding-bottom:15px !important}
+.plr5{padding:0 5px;}
+.pl0{ padding-left:0 !important}
+.plr2{padding-left:2% !important; padding-right:2% !important}
+.pt10{ padding-top:10px !important}
+
+/*宽高*/
+.w100{ width:100% !important}
+.w66{ width:66.6666667% !important}
+.w120{ width:120px !important}
+.w300{ width:300px !important}
+.w390{ width:390px !important}
+.w420{ width:420px !important}
+.w510{ width:515px !important}
+.w820{ width:820px !important}
+.w50{ width:50px;}
+.mauto{ margin:0 auto}
+
+/*文本对齐*/
+.align-l{text-align:left !important;}
+.align-c{text-align:center !important;}
+.align-r{text-align:right !important;}
+
+/*颜色*/
+.cBlue{color:#478ce7 !important;}
+.cRed{color:#ed0101 !important;}
+.cOra{color:#fe7e00 !important}
+
+/*定位*/
+.p-r{position:relative;}
+
+/*清除表单控件默认样式*/
+select{appearance:none;-moz-appearance:none;-webkit-appearance:none;-o-appearance:none;/*清除主流浏览器对select自带的样式*/-webkit-tap-highlight-color:rgba(0, 0, 0, 0);/*重置iOS下，点击某元素时出现的半透明的灰色背景的样式*/}
+select::-ms-expand{display:none;/*清除ie浏览器对select自带的样式，只支持IE10及以上*/}
+input::-webkit-input-placeholder{color:#999;/*设置placeholder颜色值*/}
+input:-moz-placeholder{color:#999;}
+input::-moz-placeholder{color:#999;}
+input:-ms-input-placeholder{color:#999;}
+.placeholder{color:#999;/*设置谷歌placeholder颜色值IE8/9*/}
+button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner {
+border:none;padding:0;/*清除火狐浏览器对按钮自带的padding值*/}
+
+/*主体*/
+.conDiv{ background:#fff; padding:10px; box-sizing:border-box; border:1px solid #e1e1e1;}
+.conDiv-head{ height:36px; line-height:36px; font-size:14px;}
+.conDiv-head .leftLine{ width:4px; height:14px; background:#0190d4; display:inline-block; float:left; margin-top:11px; margin-right:5px;}
+.bt0{ border-top:0 !important}
+
+/*表单控件*/
+.gy-input,.gy-select,.gy-tara{ width:205px;border:1px solid #e1e1e1; border-radius:3px; color:#444; background-color:#fff; box-sizing:border-box}
+.gy-input{font:12px/18px "微软雅黑"; padding:4px; height:28px;}
+.gy-select{font:12px/16px "微软雅黑"; padding:5px; height:28px; background:#fff url(../images/sel-down.png) no-repeat 96% center;padding: 3px\9;/* For IE8+ */background:#fff\9\0;}
+@media screen and (-ms-high-contrast: ), (-ms-high-contrast: none) {.gy-select{ background:#fff url(../images/sel-down.png) no-repeat 96% center;}} 
+.inp-date{ background:#fff url(../images/date.png) no-repeat 96% center;padding-right:25px; cursor:pointer}
+.gy-tara{font:12px/18px "微软雅黑"; padding:5px 5px 15px 5px; height:70px;}
+.inp-gray,.sel-gray,.tara-gray{ background-color:#fafafa; color:#888}
+
+.file-btn{ box-sizing:border-box;position:relative;}
+.file{width:50px;height:30px;overflow:hidden;position:absolute;left:0;top:0px;opacity:0;filter:alpha(opacity=0);cursor:pointer;font-size:0;}
+
+/*下拉框*/
+.select{position:relative;width:205px;}
+.select dt{ width:100%; line-height:16px;padding:5px;box-sizing:border-box; float:left; display:inline-block;border:1px solid #e5e5e5; border-radius:3px; color:#999;background:#fff url(../images/sel-down.png) no-repeat 96% center;cursor:pointer;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;position:relative;z-index:99;}
+.select dt.cur{color:#222}
+.select dd{position:absolute;left:0; right:0;top:30px;border:1px solid #e5e5e5; border-radius:3px;background:#fff;display:none;}
+.select dd div{width:100%; max-height:250px;overflow:auto;}
+.select dd div a{line-height:28px;display:block;padding:0 8px; box-sizing:border-box; color:#222}
+.select dd div a:hover{background:#0190d4; color:#fff}
+.table-select{ width:100%}
+.table-select dt{border:0; padding:7px 0; box-sizing:border-box; background-position:right center}
+.table-select dd{ top:34px;}
+
+/*表单列表*/
+.column-3 li{ width:33.3333333%}
+.column-2 li{ width:50%}
+.formList li{ margin-bottom:6px; float:left}
+.formList li label{ width:90px; text-align:right; display:inline-block; vertical-align:top; line-height:28px;}
+.formList li label em{ color:#ef0303}
+.label-m  li label{ width:110px;}
+.label-s  li label{ width:65px;}
+
+/*高级查询*/
+.searchMore{color:#0070cf; background:url(../images/btn-icons.png) no-repeat; background-position:-160px 0; width:20px; height:20px; display:inline-block; margin-top:10px;}
+.searchMore.hover { background-position:-140px 0;}
+
+/*单选-复选*/
+.radiobox{font:12px/20px "微软雅黑";}
+.radiobox p{cursor:pointer;float:left; margin-right:30px;}
+.radiobox span{margin-right:5px;}
+.radiobox input{ width:18px; height:20px}
+.radio-check{display:inline-block;width:18px;height:20px; padding-left:0;background:url(../images/icons.png) left center no-repeat; background-position:-40px 0; float:left;}
+.radio-checked{background:url(../images/icons.png) no-repeat; background-position:-60px 0 }
+.radio-check input{opacity:0;filter:alpha(opacity=0);}
+
+.checkbox{font:12px/20px "微软雅黑";}
+.checkbox p{cursor:pointer;float:left;}
+.checkbox span{margin-right:5px;}
+.checkbox input{ width:20px; height:20px}
+.checkbox-check{display:inline-block;width:20px;height:20px; padding-left:0;background:url(../images/icons.png) left center no-repeat;}
+.checkbox-checked{background:url(../images/icons.png) no-repeat; background-position:-20px 0 }
+.checkbox-check input{opacity:0;filter:alpha(opacity=0);}
+.checkTable p{ text-align:center !important; cursor:pointer}
+.checkTable p span{ cursor:pointer}
+
+/*按钮*/
+.btn-s{ font:12px/20px "微软雅黑"; padding:4px 15px; box-sizing:border-box; border-radius:3px;}
+.btn-l{ font:14px/23px "微软雅黑"; padding:5px 20px; box-sizing:border-box; border-radius:3px;}
+.btn-border{ background-color:#f1f7fa; color:#0070cf; border:1px solid #0070cf; box-sizing:border-box; padding:3px 10px;}
+.btn-blue{ background-color:#0190d4; color:#fff;}
+.btn-gray{ background-color:#b9c0c8; color:#fff;}
+.btn-border:hover,.btn-blue:hover,.btn-gray:hover{opacity:.9;}
+.btn-ico{ background:url(../images/btn-icons.png) no-repeat; width:18px; height:20px; display:inline-block; float:left}
+.ico-dr{ background-position:0 0}
+.ico-dc{ background-position:-20px 0}
+.ico-tjsp{ background-position:-40px 0}
+.ico-sp{ background-position:-60px 0}
+.ico-xz{ background-position:-80px 0}
+.ico-xg{ background-position:-100px 0}
+.ico-sc{ background-position:-120px 0}
+.ico-qr{ background-position:-180px 0}
+.ico-fs{ background-position:-200px 0}
+
+/*竖向表格*/
+.Table-A{ border:1px solid #e1e1e1; background:#fff; box-sizing:border-box; width:100%;table-layout: fixed; }
+.Table-A th,.Table-A td{ text-align:center; box-sizing:border-box;border-bottom:1px solid #e1e1e1; line-height:18px; padding:5px 10px; line-height:20px;}
+.Table-A th{ background:#fafafa; border-right:1px solid #e1e1e1; color:#111; color:#000}
+.Table-A td{ border-right:1px solid #e1e1e1;color:#444; transition:.2s linear; color:#444;}
+.Table-A tr:hover td{ background:#f1f7fa}
+.nohover tr:hover td,.Table-B tr:hover td{ background:#fff}
+.Table-A td.td-overflow{ padding:0 8px}
+.td-overflow p{overflow-x: hidden;text-overflow:ellipsis;white-space: nowrap; width:100%; line-height:28px;}
+.hide-text{ position:absolute; top:28px; left:0; right:0; background:#fff; z-index:999; padding:10px; border:1px solid #0070cf; color:#111; float:left; display:none }
+.hide-text .jt-up{ position:absolute; width:13px; height:6px; display:inline-block; background:url(../images/jt-float.png) no-repeat; top:-6px; left:10px;}
+.td-overflow:hover .hide-text{ display:block;}
+.bl0{ border-left:0 !important}
+.br0{ border-right:0 !important}
+.Table-A .gy-input{ width:100%}
+
+/*横向表格-查询条件*/
+.Table-B{table-layout: fixed}
+/* .Table-B th,.Table-B td{ padding:0 10px;} */
+.Table-B th,.Table-B td{ padding:0px;}
+.Table-B th{ text-align:right; width:120px;}
+.Table-B td{ text-align:left;}
+.Table-B .gy-input,.Table-B .gy-select,.Table-B .gy-tara{ border:0; padding-left:0; padding-right:0;width:100%}
+.Table-B .gy-select,.Table-B .inp-date{ background-position:right center}
+
+.Table-C{ border:1px solid #e1e1e1}
+.Table-C td{ padding:6px 10px; box-sizing:border-box}
+.Table-C th{ width:120px; background-color:#fafafa; border-right:1px solid #e1e1e1; color:#000}
+.Table-C tr{ border-bottom:1px solid #e1e1e1}
+
+/*链接文字*/
+.LinkWord{ color:#0070cf;}
+.LinkWord:hover{ text-decoration:underline}
+
+/*分页*/
+.PageDiv{ width:100%; text-align:center; margin:10px 0}
+.paging{width:auto; display:inline-block}
+.paging li{float:left;background:#fff;border:1px solid #e1e1e1;border-right:0;height:28px;font:12px/28px "微软雅黑";color:#666;}
+.paging li.first-child{border-radius:2px 0 0 2px;}
+.paging li.last-child{border-radius:0 2px 2px 0;border-right:1px solid #e1e1e1;}
+.paging li a,.paging li.slh{color:#666;padding:0 9px;text-align:center;display:block;}
+.paging li a:hover,.paging li a.hover{background:#478ce7;color:#fff;}
+.inp-paging{border:1px solid #e1e1e1;border-radius:2px;width:20px;padding:0 4px;font:12px/18px "微软雅黑"; float:left; margin-top:5px}
+
+/*弹出层*/
+.layer-new{ border:1px solid #0190d4}
+.layer-new .layui-layer-title{ font-size:18px; color:#111; padding-left:15px; background-color:#f1f4fa}
+.layer-new .layui-layer-content{ padding:15px; overflow:visible !important}
+.layer-new .layui-layer-setwin{ right:10px}
+.layer-new .layui-layer-btn{ border-top:1px solid #e5e5e5; text-align:center}
+.layer-new .layui-layer-btn a{line-height:35px; height:35px; background-color:#b9c0c8; color:#fff; border-radius:3px; border:0 none; font-size:15px; min-width:45px; text-align:center; margin-top:0}
+.layer-new .layui-layer-btn .layui-layer-btn0{ background-color:#0190d4; }
+
+/*标题*/
+.tit-A{ width:100%; border-bottom:1px solid #e1e1e1;}
+.tit-A .leftHead{ background:#f5f5f5;width:146px;line-height:22px; text-align:center; padding:5px 0; border-left:4px solid #0190d4; color:#007fcf;}
+.tit-tip{ background:#fffbee; border:1px solid #fed8c1; color:#fe7302; padding:0 10px; height:24px; line-height:24px; display:inline-block; font-weight:normal; font-size:12px; position:relative}
+.tip-jt{ position:absolute; width:6px; height:10px; display:inline-block; background:url(../images/jt.png) no-repeat; left:-5px; top:7px;}
+
+/*因子信息列表*/
+.yzList li{ float:left; line-height:20px; margin-right:10px;}
+.yzList li a.ico-del{ width:20px; height:20px; background:url(../images/icons.png) no-repeat; background-position:-80px 0; display:inline-block; margin-left:5px}
+.yzList li a.ico-del:hover{background-position:-100px 0; }
+.yzList li em{ color:#ccc; font-size:12px; margin-left:5px; font-weight:lighter}
+
+/*适用范围列表*/
+.addList{ background:#fbfbfb; border:1px solid #e1e1e1; padding:10px; box-sizing:border-box}
+.ico-add,.ico-minus{ width:20px; height:20px; display:inline-block; background:url(../images/icons.png) no-repeat;}
+.ico-add{background-position:-120px 0}
+.ico-add:hover{background-position:-140px 0}
+.ico-minus{background-position:-160px 0}
+.ico-minus:hover{background-position:-180px 0}
+
+/*tab切换*/
+.TabNav-A{ border:1px solid #e1e1e1; background:#fff; height:35px;}
+.TabNav-A li{ float:left; padding:0 10px 0 15px;line-height:33px;text-align:center; box-sizing:border-box; border-right:1px solid #e1e1e1;cursor:pointer;}
+.TabNav-A li.nobr{ border-right:0}
+.TabNav-A li.hover{ color:#fff; background:#0190d4;}
+.TabNav-A li span{ line-height:35px; display:inline-block; min-width:80px;}
+.TabNav-A a.ico-close{ width:16px; height:16px; display:inline-block; background:url(../images/icons.png) no-repeat center; background-position:-240px 0; margin-top:7px}
+.TabNav-A li.hover a.ico-close{ background-position:-260px 0}
+.TabNav-A a.ico-close:hover{ background-position:-280px 0}
+.TabNav-A li.hover a.ico-close:hover{ background-position:-300px 0}
+
+.TabCnt-A{ border:1px solid #e1e1e1; border-top:0; padding:10px;}
+.TabPane-A{display:none;zoom:1;}
+.TabCnt-A .hover{display:block;}
+.width-col-2{ width:66.8%}
+.width-col-3{ width:83.2%}
+.width-col-3-2{ width:86.8%}
+
+/*响应式代码*/
+@media only screen and (max-width: 1100px){
+	.width-col-2{ width:71.4%}
+	.width-col-3{ width:87.8%}
+}
+
+@media only screen and (min-width: 1100px) and (max-width: 1300px){
+	.width-col-2{ width:66.8%}
+	.width-col-3{ width:83.2%}
+	.width-col-3-2{ width:86.8%}
+}
+@media only screen and (min-width: 1301px) and (max-width: 1399px){
+	.width-col-2{ width:65.8%}
+	.width-col-3{ width:82.4%}
+	.width-col-3-2{ width:85.8%}
+}
+@media only screen and (min-width: 1400px) and (max-width: 1500px){
+	.width-col-2{ width:65%}
+	.width-col-3{ width:81.8%}
+	.width-col-3-2{ width:84.8%}
+}
+@media only screen and (min-width: 1501px) and (max-width: 1700px){
+	.width-col-2{ width:63.4%}
+	.width-col-3{ width:80%}
+	.width-col-3-2{ width:83.3%}
+}
+@media only screen and (min-width: 1701px){
+	.width-col-2{ width:61%}
+	.width-col-3{ width:77.7%}
+	.width-col-3-2{ width:81%}
+}
+
+/*---------------------首页---------------------*/
+.container-index{ background-color:#f8f8f8; padding:10px 1%}
+.mainDiv{ background:#fff; border-radius:3px; border:1px solid #e1e1e1; padding:0 10px 10px 10px; box-sizing:border-box}
+.tit-B{font:14px/39px "微软雅黑"; border-bottom:1px solid #e1e1e1; font-weight:bold}
+
+.w20{ width:20%}
+.w44{ width:44.2%}
+.w34{ width:34.2%}
+.w65{ width:65%}
+.mr1{ margin-right:0.8%}
+.h280{ height:280px}
+.h300{ height:310px}
+
+/*常用功能*/
+.gn-list li{ float:left; width:50%; text-align:center; margin-top:12px}
+.gn-list li a{ display:inline-block;}
+.gn-list li dt{ width:40px; height:40px; background:url(../images/gn-ico-bg.png) no-repeat; margin:0 auto; text-align:center}
+.gn-list li a.gn-ico1 dt{ background-position:0 0}
+.gn-list li a.gn-ico2 dt{ background-position:-40px 0}
+.gn-list li a.gn-ico3 dt{ background-position:-80px 0}
+.gn-list li a.gn-ico4 dt{ background-position:-120px 0}
+.gn-list li a.gn-ico5 dt{ background-position:-160px 0}
+.gn-list li a.gn-ico6 dt{ background-position:-200px 0}
+.gn-list li dt span{ width:24px; height:24px; display:inline-block; background:url(../images/gn-icos.png) no-repeat; margin-top:8px}
+.gn-list li a.gn-ico1 span{ background-position:0 0}
+.gn-list li a.gn-ico2 span{ background-position:-24px 0}
+.gn-list li a.gn-ico3 span{ background-position:-48px 0}
+.gn-list li a.gn-ico4 span{ background-position:-72px 0}
+.gn-list li a.gn-ico5 span{ background-position:-96px 0}
+.gn-list li a.gn-ico6 span{ background-position:-120px 0}
+.gn-list li dd{font:12px/24px "微软雅黑"; color:#222}
+.gn-list li a.gn-ico1:hover dd{ color:#8593fd}
+.gn-list li a.gn-ico2:hover dd{ color:#af87fe}
+.gn-list li a.gn-ico3:hover dd{ color:#58cd81}
+.gn-list li a.gn-ico4:hover dd{ color:#569af6}
+.gn-list li a.gn-ico5:hover dd{ color:#ffb501}
+.gn-list li a.gn-ico6:hover dd{ color:#fe856d}
+
+/*系统公告*/
+.TabNav-B{ width:100%; border-bottom:1px solid #e1e1e1;}
+.TabNav-B li{ float:left; margin-right:5px}
+.TabNav-B li a{font:14px/40px "微软雅黑"; color:#111; display:inline-block; font-weight:bold; padding:0 5px; box-sizing:border-box}
+.TabNav-B li.hover a{ border-bottom:3px solid #0190d4; height:40px;}
+.TabCnt-B .hover{display:block;}
+.TabPane-B{display:none;zoom:1;}
+
+.notice-list li{ border-bottom:1px dashed #e1e1e1; height:38px; line-height:38px; }
+.notice-list li.nob{ border-bottom:0}
+.notice-list li a{ color:#222}
+.notice-list li i.notice-ico{ width:20px; height:20px;background:url(../images/icons.png) no-repeat; background-position:-220px 0; display:inline-block; margin-top:9px;}
+.notice-list li.notice-import i{background-position:-200px 0;}
+.notice-list li span{ width:75%; display:inline-block;white-space: nowrap;overflow-x: hidden;text-overflow:ellipsis;}
+.notice-list li a:hover,.notice-list li a:hover em{ color:#0190d4}
+.notice-list li em{ color:#999}
+
+/*门店排行*/
+.rank-list li{ margin-top:11px; height:38px;}
+.rank-list li a{ width:100%;font:12px/36px "微软雅黑"; color:#111; display:inline-block; border:1px solid #e1e1e1; padding:0 10px; box-sizing:border-box;white-space: nowrap;overflow-x: hidden;text-overflow:ellipsis; }
+.rank-list li i.rank-bg{ width:18px; height:18px; display:inline-block; text-align:center;font:10px/18px "微软雅黑"; color:#fff; background:#37a2da; margin-top:9px; border-radius:3px; margin-right:10px}
+.rank-list li i.rank-bg1{background:#f33333}
+.rank-list li i.rank-bg2{background:#fd7511}
+.rank-list li i.rank-bg3{background:#ffb501}
+.rank-list li a:hover{ background:#f8f8f8}
+
+/*主机监控*/
+.Table-D{ border:0}
+.Table-D th,.Table-D td{ border:0; line-height:20px; padding:8px; text-align:center}
+.Table-D th,.bg-gray{ background:#f8f8f8}
+.cOra td{ color:#fe7e00}
+.link-ora{color:#fe7e00}
+.link-ora:hover{ text-decoration:underline}
+
+/*----------------------css-0705--------------------*/
+/*宽高*/
+.w18{ width:18%;}
+.w81{ width:81.2%}
+.w240{ width:240px;}
+.w352{ width:352px;}
+.h472{ height:472px;}
+
+/*徽章*/
+.badge{ min-width:12px;height:18px; line-height:18px; text-align:center; font-size:10px; padding:0 3px; border-radius:100%; background:#0190d4; color:#fff; display:inline-block}
+
+.conDiv2{overflow-y:auto; border:1px solid #e5e5e5}
+
+/*搜索*/
+.searchDiv{ padding:10px; border-bottom:1px solid #e5e5e5; box-sizing:border-box}
+.searchDiv .gy-input{ width:85%; border-radius:0}
+.searchDiv .searchIco{ width:15%; height:20px; padding:4px 0; display:inline-block; text-align:center; background:#0190d4;}
+.searchDiv .searchIco:hover{ opacity:.9}
+
+/*选择列表*/
+.selectList li a{ width:100%; height:32px; line-height:32px; padding:0 10px; box-sizing:border-box; cursor:pointer; color:#222; display:inline-block}
+.selectList li:hover a{ background:#f5f5f5;}
+.selectList li.hover a{ background:#0190d4; border-left:3px solid #31b4f2; color:#fff; padding-left:7px}
+
+/*汇总展示*/
+.total-tip{ width:100%; line-height:20px; padding:10px; box-sizing:border-box; background:#fffbee; border:1px solid #fed8c1;}
+
+/*信息列表*/
+.infoList li{ line-height:20px; margin-bottom:10px; width:33.33%; float:left}
+.infoList li span{ width:120px; display:inline-block; text-align:right;}
+.infoList li p{ color:#666; max-width:60%;}
+.link-border{ width:240px;border:1px solid #e1e1e1; border-radius:3px; color:#444; background-color:#fff; box-sizing:border-box;font:12px/18px "微软雅黑"; padding:4px 6px; height:28px;}
+.link-border a{ text-decoration:underline; color:#fe7302}
+
+/*流程步骤*/
+.processDiv{ margin:40px auto; width:80%}
+.processDiv td{ width:33.33%; text-align:center; position:relative}
+.processDiv td dt{ width:48px; height:48px; line-height:48px; color:#fff; text-align:center; font-size:22px; margin:0 auto; background:url(../images/process-bg.png) no-repeat; background-position:-48px 0;}
+.processDiv td dd{ line-height:22px; font-size:14px; color:#666;}
+.processDiv td dd p{ font-size:16px; color:#333; margin-top:10px;}
+.processDiv td span.line{ width:80%; height:6px; display:inline-block; background:#dadde1; position:absolute; left:0; top:21px; margin-left:-40%;}
+.processDiv td a.hover dt{ background-position:0 0;}
+.processDiv td a.hover span.line{ background-color:#008ccf}
+
+.wjdr{ display:none;}
+.TabNav-C li{ padding:0 10px; font-size:14px;}
+
+/*单据生成*/
+.top-tip{ font-size:14px; line-height:32px; padding-bottom:10px; border-bottom:1px solid #e1e1e1}
+.top-tip span{ font-size:22px; line-height:32px; display:inline-block}
+.top-tip span img{ margin-right:10px}
+.infoList-2 li{ float:left; line-height:20px; margin-top:10px; color:#666}
+

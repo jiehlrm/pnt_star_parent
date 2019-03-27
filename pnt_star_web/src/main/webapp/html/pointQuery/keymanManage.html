@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>关键人管理</title>
+    <script type="text/javascript" src="../../js/head.js"></script>
+    <!-- 引入catui的css样式文件 -->
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catLayer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTable.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTag.css" />
+    <!-- 引入catui组件js -->
+    <script type="text/javascript" src="../../js/catui/catLayer.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTable.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTag.js"></script>
+	<script type="text/javascript" src="../../js/business/keymanManage.js"></script>
+</head>
+
+<body>
+    <div id="pointSearch" class="bgBorder mt10 minHeight">
+        <h3 class="mainTitle">
+            <span class="fl titHead">查询条件</span>
+            <div class="clear"></div>
+        </h3>
+        <ul class="new-list mt10">
+            <li><label class="fl">本地网：</label>
+                <dl class="select fl col-5 lan-select">
+                    <dt>请选择</dt>
+                    <dd id="lan_search">
+                    </dd>
+                </dl>
+                <div class="clear"></div>
+            </li>
+            <li><label class="fl">用户号码：</label>
+                <input class="lina-inp col-5" value="" id="cust_num"/>
+                <div class="clear"></div>
+            </li>
+            <div class="clear"></div>
+            <li><label class="fl">关键人类型：</label>
+                <dl class="select fl col-5 keyman-type">
+                    <dt>请选择</dt>
+                    <dd>
+                    	<div><a value="">请选择</a></div>
+                        <div><a value="1000">政企关键人</a></div>
+                        <div><a value="1002">公众关键人</a></div>
+                        <div><a value="1005">普通关键人</a></div>
+                    </dd>
+                </dl>
+                <div class="clear"></div>
+            </li>
+            <li><label>加入时段：</label><span class="col-5 dw-rel"><input class="lina-inp timeRange col-5"><span class="inp-date-abs"><img src="../../images/inp-date.png" width="14" height="14" /></span></li>
+            <div class="clear"></div>
+        </ul>
+        <div class="c-btn">
+            <a class="blueBtn" id="doQuery">查询</a>
+            <a class="gy-btn2 orgBtn2 ml10" id="resetQuery">重置</a>
+            <a class="gy-btn2 orgBtn2 ml10" id="doQueryExport">查询导出</a>
+        </div>
+    <h3 class="mainTitle mt10">
+      <span class="fl titHead">关键人管理</span>
+      <div class="clear"></div>
+    </h3>
+   	 <div class="ml10 mt10">
+   	 		<a class="gy-btn blueBtn" onclick="add()">加入关键人</a>
+   	 		<a class="gy-btn blueBtn ml10" onclick="upd()">资料修改</a>
+   	 		<a class="gy-btn blueBtn ml10" onclick="adj()">类型调整</a>
+   	 		<a class="gy-btn blueBtn ml10" onclick="del()">删除</a>
+   	 		<a class="gy-btn blueBtn ml10" >批量导入</a>
+        </div>
+    <div id="pointForm" style="padding: 10px;"></div>
+</div>
+<!--新增关键人div -->
+<div class="catLayer" style="display: none;" id="addDlg">
+	<div
+		style="background: #FFF; padding: 8px; position: absolute; min-width: 800px; min-height: 400px; top: 169px; left: 360px;">
+		<div style="width: 800px;">
+			<div class="pointQuery_title">
+				<span>新增关键人</span><span style="float: right;"><a
+					class="aui_close">×</a></span>
+				<table class="table1 table1-hover checkbox-lina mt10" width="100%"
+					border="0" cellspacing="0" cellpadding="0">
+					<tbody>
+						<tr>
+							<td class="table1-bg">*本地网：</td>
+							<td><dl class="select fl  lan-select-add">
+									<dt>请选择</dt>
+									<dd id="lan_search_add"></dd>
+								</dl></td>
+							<td class="table1-bg">*用户号码：</td>
+							<td><input class="lina-inp col-5" id="accNum_add"
+								value=""><a
+								class="gy-btn2 orgBtn2 ml5" id="getMsg">获取资料</a></td>
+							<td class="table1-bg">*关键人类型：</td>
+							<td><dl class="select fl  keyman-type-add"
+									style="width: 100%">
+									<dt>选择关键人</dt>
+									<dd id="keyman_type_add">
+										<div>
+											<a data-code="1000">政企关键人</a>
+										</div>
+										<div>
+											<a data-code="1002">公众关键人</a>
+										</div>
+										<div>
+											<a data-code="1005">普通关键人</a>
+										</div>
+									</dd>
+								</dl></td>
+						</tr>
+						<tr>
+							<td class="table1-bg">*直享星级：</td>
+							<td><dl class="select fl  star-level-add">
+									<dt>选择星级</dt>
+									<dd id="star_level_add">
+										<div>
+											<a data-code="3100">一星</a>
+										</div>
+										<div>
+											<a data-code="3200">二星</a>
+										</div>
+										<div>
+											<a data-code="3300">三星</a>
+										</div>
+										<div>
+											<a data-code="3400">四星</a>
+										</div>
+										<div>
+											<a data-code="3500">五星</a>
+										</div>
+										<div>
+											<a data-code="3600">六星</a>
+										</div>
+										<div>
+											<a data-code="3700">七星</a>
+										</div>
+										<div>
+											<a data-code="3800">非星级</a>
+										</div>
+									</dd>
+								</dl></td>
+							<td class="table1-bg">介绍人号码：</td>
+							<td><input class="lina-inp col-5" id="introducerNbr_add"
+								value="" width="100%"></td>
+							<td class="table1-bg">产品实例ID：</td>
+							<td id="prodInstId_add"></td>
+						</tr>
+						<tr>
+							<td class="table1-bg">客户编码：</td>
+							<td id="custCd_add"></td>
+							<td class="table1-bg">客户名称：</td>
+							<td id="custName_add"></td>
+							<td class="table1-bg">失效时间：</td>
+							<td><input class="lina-inp date col-5" id="expDate_add"></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="c-btn mt10">
+					<a class="gy-btn2 orgBtn2" id="sure_add">确认</a><a
+						class="gy-btn2 orgBtn2 ml5" id="close_add">返回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 关键人详情div -->
+<div class="catLayer" style="display: none;" id="typeDetailDlg">
+	<div
+		style="background: #FFF; padding: 8px; position: absolute; min-width: 800px; min-height: 400px; top: 169px; left: 360px;">
+		<div style="width: 800px;">
+			<div class="pointQuery_title">
+				<span>关键人类型变更记录</span><span style="float: right;"><a
+					class="aui_close">×</a></span>
+			</div>
+			<div id="keymanTypechangeRecord"></div>
+		</div>
+	</div>		
+</div>
+<!--关键人调整div -->
+<div class="catLayer" style="display: none;" id="adjustDlg">
+	<div
+		style="background: #FFF; padding: 8px; position: absolute; min-width: 800px; min-height: 400px; top: 169px; left: 360px;">
+	<div style="width: 800px;">
+		<div class="pointQuery_title">
+			<span>变更关键人类型</span><span style="float: right;"><a
+				class="aui_close">×</a></span>
+			<table class="table1 table1-hover checkbox-lina mt10" width="100%"
+				border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td class="table1-bg" style="text-align: right;">调整前类型：</td>
+						<td style="text-align: left;" id="typeBefore_adj" ></td>
+						<td class="table1-bg" style="text-align: right;">*调整后类型：</td>
+						<td style="text-align: left;">
+							<dl class="select fl  keyman-type-adj"
+									style="width: 100%">
+									<dt>选择关键人</dt>
+									<dd id="keyman_type_adj">
+										<div>
+											<a data-code="1000">政企关键人</a>
+										</div>
+										<div>
+											<a data-code="1002">公众关键人</a>
+										</div>
+										<div>
+											<a data-code="1005">普通关键人</a>
+										</div>
+									</dd>
+								</dl>
+						</td>
+					</tr>
+					<tr>
+						<td class="table1-bg" style="text-align: right;">类型调整前失效时间：</td>
+						<td style="text-align: left;" id="expDateBefore_adj"></td>
+						<td class="table1-bg" style="text-align: right;">类型调整后失效时间：</td>
+						<td style="text-align: left;"><input class="lina-inp date col-5" id="expDate_adj"></td>
+					</tr>
+					<tr>
+						<td class="table1-bg" style="text-align: right;">*调整原因：</td>
+						<td colspan="3" style="height: 150px; text-align: left;"><textarea
+								id="reason_adj" style="width: 500px; height: 90%;"
+								class="lina-inp col-5"></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="c-btn mt10">
+					<a class="gy-btn2 orgBtn2" id="sure_adj">修改</a><a
+						class="gy-btn2 orgBtn2 ml5" id="close_adj">返回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 关键人信息更新 -->
+	<div class="catLayer" style="display: none;" id="updateDlg">
+		<div
+			style="background: #FFF; padding: 8px; position: absolute; min-width: 800px; min-height: 400px; top: 169px; left: 360px;">
+			<div style="width: 800px;">
+				<div class="pointQuery_title">
+					<span>资料修改</span><span style="float: right;"><a
+						class="aui_close">×</a></span>
+					<table class="table1 table1-hover checkbox-lina mt10" width="100%"
+						border="0" cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr>
+								<td class="table1-bg">本地网：</td>
+								<td id="lan_upd"></td>
+								<td class="table1-bg">用户号码：</td>
+								<td id="accNbr_upd"></td>
+								<td class="table1-bg">关键人类型：</td>
+								<td id="pointKeymanTypeName_upd"></td>
+							</tr>
+							<tr>
+								<td class="table1-bg">*直享星级：</td>
+								<td><dl class="select fl  star-level-upd">
+									<dt id="beforeLevel_upd"></dt>
+									<dd id="star_level_upd">
+										<div>
+											<a data-code="3100">一星</a>
+										</div>
+										<div>
+											<a data-code="3200">二星</a>
+										</div>
+										<div>
+											<a data-code="3300">三星</a>
+										</div>
+										<div>
+											<a data-code="3400">四星</a>
+										</div>
+										<div>
+											<a data-code="3500">五星</a>
+										</div>
+										<div>
+											<a data-code="3600">六星</a>
+										</div>
+										<div>
+											<a data-code="3700">七星</a>
+										</div>
+										<div>
+											<a data-code="3800">非星级</a>
+										</div>
+									</dd>
+								</dl></td>
+								<td class="table1-bg">介绍人号码：</td>
+								<td><input class="lina-inp col-5" id="introducerNbr_upd"
+									value=""></td>
+								<td class="table1-bg">产品实例ID：</td>
+								<td id="prodInstId_upd"></td>
+							</tr>
+							<tr>
+								<td class="table1-bg">客户编码：</td>
+								<td id="custCd_upd"></td>
+								<td class="table1-bg">客户名称：</td>
+								<td id="custName_upd"></td>
+								<td class="table1-bg">失效时间：</td>
+								<td id="expDate_upd"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="c-btn mt10">
+						<a class="gy-btn2 orgBtn2" id="sure_upd">确认</a><a
+							class="gy-btn2 orgBtn2 ml5" id="close_upd">返回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

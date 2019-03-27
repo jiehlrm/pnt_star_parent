@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<title>详单查询</title>
+<!-- 引入公共头部信息 -->
+<script type="text/javascript" src="/pnt_star_web/js/head.js"></script> 
+<script type="text/javascript" src="/pnt_star_web/js/detailQuery/billQuery.js"></script>
+
+</head>
+<body class="p10">
+<!--查询条件-begin-->
+<div>
+	<h3 class="conDiv-head">
+        <em class="leftLine"></em>查询条件
+        <a class="searchMore fr ml10"></a>
+        <div class="fr hideBtn"><button class="btn-s btn-blue" id="search_btn">查询</button><button class="btn-s btn-gray ml10">清空</button></div>
+    </h3>
+    <div class="hideSearch mt5">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="Table-A Table-B">
+        <tr>
+        	<th>账期</th><td><select class="gy-select" id="billingCycleId"><option>201801</option></select></td>
+        	<th>类型</th><td><select class="gy-select" id="qryType">
+        	</select></td>
+    	</tr>
+        <tr>
+        	<th>号码</th><td><input  type="text"  class="gy-input" placeholder="请输入"  id="phoneNum"></input></td>
+            </td>
+    	</tr>
+    </table>
+	</div>
+</div>
+<!--查询条件-end-->
+
+<!--查询结果-begin-->
+<div class="mt20">
+    <div>
+    	<button class="btn-s btn-border ml10" id="btn_out"><span class=" btn-ico ico-dc"></span>导出</button>
+    </div>
+	<!--表格-begin-->
+		 <div style="min-height:100px; width:100%; overflow-x:auto; border-right:0px solid #e1e1e1">
+			<table  border="0" cellspacing="0" cellpadding="0" class="Table-A checkTable mt10" id="checkTable">
+			</table>
+			
+			<!--分页-begin-->
+			<div class="page" id="tablePageDiv"></div>
+			<!--分页-end-->
+		</div>
+</div>
+<!--查询结果-end-->
+</body>
+</html>

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*--------------------表单控件归纳--------------------*/
+
+.Formlist li{margin-bottom:10px; width:40%;}
+.Formlist li span{width:80px;line-height:30px;display:inline-block;text-align:right;}
+.cGreen{color:#00d1c4;}
+
+/*清除表单控件默认样式*/
+select{
+	appearance:none;
+	-moz-appearance:none;
+	-webkit-appearance:none;
+	-o-appearance:none;/*清除主流浏览器对select自带的样式*/
+	-webkit-tap-highlight-color:rgba(0, 0, 0, 0); /*重置iOS下，点击某元素时出现的半透明的灰色背景的样式*/
+	}
+select::-ms-expand{
+	display: none;/*清除ie浏览器对select自带的样式，只支持IE10及以上*/
+	}
+textarea{
+	resize:none;/*清除谷歌浏览器文本域中自带的拖拽缩放属性*/
+	}
+
+/*日期控件*/
+.Wdate{background:#fff url(../../images/wdate.png) no-repeat 98% center;}
+.WdateFmtErr{font-weight:bold;color:#f00;}
+
+/*文本域*/
+.gy-textarea{height:50px;}
+	
+/*单选/复选*/
+label{cursor:pointer;line-height:20px;margin-right:20px;display:inline-block;}
+.label-radio{background:url(../../images/radio.png) no-repeat;padding-left:10px;}
+.radio-checked{background:url(../../images/radio-checked.png) no-repeat;}
+.label-check{background:url(../../images/check.png) no-repeat;padding-left:10px;}
+.check-checked{background:url(../../images/check-checked.png) no-repeat;}
+.label-radio input,.label-check input{opacity:0;filter:alpha(opacity=0);}
+
+

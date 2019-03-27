@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>兑换清单报表</title>
+    <script type="text/javascript" src="../../js/head.js"></script>
+    <!-- 引入catui的css样式文件 -->
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catLayer.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTable.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/catui/catTag.css" />
+
+
+    <!-- 引入catui组件js -->
+    <script type="text/javascript" src="../../js/catui/catLayer.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTable.js"></script>
+    <script type="text/javascript" src="../../js/catui/catTag.js"></script>
+</head>
+
+<body>
+    <div id="pointSearch" class="bgBorder mt10 pr50">
+        <ul class="new-list mt10">
+            <li><label class="fl">本地网：</label>
+                <dl class="select fl col-5 lan-select">
+                    <dt style="color: #333; width: calc(100% + 12px);">请选择</dt>
+                    <dd id="lan_search"></dd>
+                </dl>
+                <div class="clear"></div>
+            </li>
+            <li><label>账期：</label>
+                <input class="lina-inp col-5" value="201812" id="account_period" />
+                <div class="clear"></div>
+            </li>
+        </ul>
+        <div class="c-btn">
+            <a class="blueBtn" id="doQuery">查询</a> 
+            <a class="blueBtn ml10" id="exportForm">导出</a>
+            <a class="gy-btn2 orgBtn2 ml10" id="resetQuery">重置</a>
+        </div>
+    </div>
+    
+    <div id="pointForm" style="margin: 10px"></div>
+    
+    <div class="clear"></div>
+    
+    <script type="text/javascript" src="../../js/business/exchangeListReport.js"></script>
+    <script type="text/javascript" src="../../js/business/public.js"></script>
+
+</body>
+
+</html>

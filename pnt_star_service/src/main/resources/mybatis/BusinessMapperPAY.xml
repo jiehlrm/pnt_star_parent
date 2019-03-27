@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd"><mapper namespace="commonMapperPAY">
+ 
+	 <!-- 根据条件查询表中的信息 -->
+	<select id="QUERY_PAY_CHANNEL" parameterType="map" resultType="hashMap">
+	    SELECT
+		  pcpm.PAY_METHOD_ID,
+		  pcpm.PAY_METHOD_NAME,
+		  pc.PAY_CHANNEL_NAME,
+		  pcil.PAY_CHANNEL_INTF_ID,
+		  pcil.PAY_CHANNEL_INTF_NAME,
+		  pcil.PAY_CHANNEL_INTF_DESC,
+		  (CASE
+		  	WHEN pcil.STATUS_CD = '1' THEN '有效' 
+		 	WHEN pcil.STATUS_CD = '2' THEN '失效'
+			WHEN pcil.STATUS_CD = '3' THEN '已归档'
+			WHEN pcil.STATUS_CD = '4' THEN '在途'
+		  		END
+			)AS STATUS_CD,
+		  pcia.PAY_CHANNEL_INTF_ATTR_ID,
+		  (CASE
+		  	WHEN pcia.ATTR_ID = '0' THEN '' 
+		 	WHEN pcia.ATTR_ID = '1' THEN '验签有效期'
+		  		END
+			) AS ATTR_ID,
+		  pcia.ATTR_VALUE
+		FROM
+		  pay_channel_interface_list pcil
+		LEFT JOIN pay_channel_pay_method pcpm ON pcpm.PAY_METHOD_ID = pcil.PAY_METHOD_ID
+		LEFT JOIN pay_channel_intf_attr pcia ON pcil.PAY_CHANNEL_INTF_ID = pcia.PAY_CHANNEL_INTF_ID
+		LEFT JOIN PAY_CHANNEL pc ON pcpm.PAY_CHANNEL_ID = pc.PAY_CHANNEL_ID
+		WHERE 1 = 1
+		<if test="payMethodId != null and payMethodId != ''" >    
+	        AND pcpm.PAY_METHOD_ID like concat('%',#{payMethodId},'%') 
+	    </if> 
+	    <if test="payMethodName != null and payMethodName != ''" >    
+	        AND pcpm.PAY_METHOD_NAME like concat('%',#{payMethodName},'%')
+	    </if> 
+	    <if test="ifScan != null and ifScan != ''" >    
+	        AND pcpm.IF_SCAN = #{ifScan}
+	    </if> 
+	</select>
+ 
+    <!-- 查询表中的数据量 -->
+	<select id="QUERY_PAY_CHANNEL_COUNT" parameterType="map" resultType="hashMap">
+	    SELECT
+		  count(1) count
+		FROM
+		  pay_channel_pay_method pcpm
+		LEFT JOIN pay_channel_interface_list pcil ON pcpm.PAY_METHOD_ID = pcil.PAY_METHOD_ID
+		LEFT JOIN pay_channel_intf_attr pcia ON pcil.PAY_CHANNEL_INTF_ID = pcia.PAY_CHANNEL_INTF_ID
+		WHERE 1 = 1
+		<if test="payMethodId != null and payMethodId != ''" >    
+	        AND pcpm.PAY_METHOD_ID like concat('%',#{payMethodId},'%') 
+	    </if> 
+	    <if test="payMethodName != null and payMethodName != ''" >    
+	        AND pcpm.PAY_METHOD_NAME like concat('%',#{payMethodName},'%')
+	    </if> 
+	    <if test="ifScan != null and ifScan != ''" >    
+	        AND pcpm.IF_SCAN = #{ifScan}
+	    </if> 
+	</select>
+	
+	<!-- 插入支付方式、支付接口列表、支付接口属性表中 -->
+	<insert id="INSERT_PAY_CHANNEL_PAY_METHOD"  parameterType="map">
+	<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PAY_METHOD_ID">
+	  		SELECT PAY_CHANNEL_PAY_METHOD_SEQ.nextval()
+	</selectKey>
+	insert into pay_channel_pay_method
+			(
+			PAY_METHOD_ID,
+			CREATE_STAFF,			
+			CREATE_DATE,		
+			PAY_METHOD_NAME,
+			PAY_CHANNEL_ID,
+			IF_SCAN,
+			STATUS_CD,
+			STATUS_DATE		
+			)
+			values
+			(
+			#{PAY_METHOD_ID},
+			'24316',
+			now(),
+			#{PAY_METHOD_NAME},
+			#{PAY_CHANNEL_ID},
+			#{IF_SCAN},
+			'1',
+			now()
+			);
+	</insert>
+	
+	<!-- 插入支付方式、支付接口列表、支付接口属性表中 -->
+	<insert id="INSERT_PAY_CHANNEL_INTERFACE_LIST"  parameterType="map">
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PAY_CHANNEL_INTF_ID">
+	          SELECT PAY_CHANNEL_INTERFACE_LIST_SEQ.nextval()
+	    </selectKey>
+		insert into pay_channel_interface_list
+			(
+			PAY_CHANNEL_INTF_ID,
+			CREATE_STAFF,			
+			CREATE_DATE,		
+			PAY_INTF_BACK_URL,
+			PAY_INTF_URL,
+			PAY_METHOD_ID,
+			PAY_CHANNEL_INTF_NAME,
+			PAY_CHANNEL_INTF_DESC,
+			STATUS_CD,
+			STATUS_DATE		
+			)
+			values
+			(
+			#{PAY_CHANNEL_INTF_ID},
+			'24316',
+			now(),
+			#{PAY_INTF_BACK_URL},
+			#{PAY_INTF_URL},
+			#{PAY_METHOD_ID},
+			#{PAY_CHANNEL_INTF_NAME},
+			#{PAY_CHANNEL_INTF_DESC},
+			'1',
+			now()
+			);
+	</insert>
+	
+	<!-- 插入支付方式、支付接口列表、支付接口属性表中 -->
+	<insert id="INSERT_PAY_CHANNEL_INTEF_ATTR"  parameterType="map">
+	<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PAY_CHANNEL_INTF_ATTR_ID">
+	          SELECT PAY_CHANNEL_INTF_ATTR_SEQ.nextval()
+	</selectKey>
+	insert into pay_channel_intf_attr
+			(
+			PAY_CHANNEL_INTF_ATTR_ID,
+			CREATE_STAFF,			
+			CREATE_DATE,		
+			EXP_DATE,
+			ATTR_VALUE,
+			ATTR_ID,
+			PAY_CHANNEL_INTF_ID,
+			STATUS_CD,
+			STATUS_DATE,
+			EFF_DATE		
+			)
+			values
+			(
+			#{PAY_CHANNEL_INTF_ATTR_ID},
+			'24316',
+			now(),
+			now(),
+			#{ATTR_VALUE},
+			#{ATTR_ID},
+			#{PAY_CHANNEL_INTF_ID},
+			'1',
+			now(),
+			now()
+			);
+	</insert>
+	
+	<select id="QUERY_PAY_CHANNEL_2" parameterType="map" resultType="hashMap">
+		SELECT A.PAY_CHANNEL_ID AS VALUE,
+			   A.PAY_CHANNEL_NAME  AS TEXT
+	    FROM PAY_CHANNEL A 
+	    WHERE A.PAY_CHANNEL_ID 
+	</select>
+	
+	<select id="QUERY_SIGN_TYPE" parameterType="map" resultType="hashMap">
+		SELECT A.SIGN_TYPE_ID AS VALUE,
+			   A.SIGN_TYPE_NAME AS TEXT
+	    FROM SIGN_TYPE A
+	</select>
+	
+	<select id="QUERY_TENANT_ACCOUNT" parameterType="map" resultType="hashMap">
+		SELECT A.TENANT_ACCOUNT_ID ,
+			   A.PAY_CHANNEL_ID  ,
+			   C.PAY_CHANNEL_NAME,
+			   A.SIGN_TYPE_ID,
+			   B.SIGN_TYPE_NAME,
+			   A.ORG_ID,
+			   A.ACCOUNT,
+			   A.CHANNEL_APPID,
+			   A.SUB_ACCOUNT,
+			   A.CHANNEL_SUB_APPID,
+			   A.CHANNEL_PRIVATE_KEY,
+			   A.CHANNEL_PUBLICE_KEY,
+			   A.SSLCERT_PATH,
+			   A.SSLCERT_PASSWORD,
+			   '管理员' AS CREATE_STAFF,
+			   (CASE
+		  	WHEN D.ATTR_ID = '0' THEN '' 
+		 	WHEN D.ATTR_ID = '1' THEN '验签有效期'
+		  		END
+			) AS ATTR_ID,
+			D.ATTR_VALUE,
+			   DATE_FORMAT(A.CREATE_DATE,'%Y-%m-%d %H:%i:%s') AS CREATE_DATE
+		FROM COMMERCIAL_TENANT_ACCOUNT A,SIGN_TYPE B,PAY_CHANNEL C ,PAY_CHANNEL_ATTR D
+		WHERE A.PAY_CHANNEL_ID = C.PAY_CHANNEL_ID AND A.SIGN_TYPE_ID = B.SIGN_TYPE_ID
+		   AND C.PAY_CHANNEL_ID = D.PAY_CHANNEL_ID
+		<if test="ACCOUNT != null and ACCOUNT !=''">
+			AND A.ACCOUNT  like concat('%',#{ACCOUNT},'%')
+		</if>
+		<if test="PAY_CHANNEL_ID != null and PAY_CHANNEL_ID !=''">
+			AND A.PAY_CHANNEL_ID  =  #{PAY_CHANNEL_ID}
+		</if>
+		<if test="SIGN_TYPE_ID != null and SIGN_TYPE_ID !=''">
+			AND A.SIGN_TYPE_ID  =  #{SIGN_TYPE_ID}
+		</if>
+	</select>
+	<select id="QUERY_TENANT_ACCOUNT_COUNT" parameterType="map" resultType="hashMap">
+		SELECT COUNT(1) as count
+		FROM COMMERCIAL_TENANT_ACCOUNT A,SIGN_TYPE B,PAY_CHANNEL C
+		WHERE A.PAY_CHANNEL_ID = C.PAY_CHANNEL_ID AND A.SIGN_TYPE_ID = B.SIGN_TYPE_ID
+		<if test="ACCOUNT != null and ACCOUNT !=''">
+			AND A.ACCOUNT  like concat('%',#{ACCOUNT},'%')
+		</if>
+		<if test="PAY_CHANNEL_ID != null and PAY_CHANNEL_ID !=''">
+			AND A.PAY_CHANNEL_ID  =  #{PAY_CHANNEL_ID}
+		</if>
+		<if test="SIGN_TYPE_ID != null and SIGN_TYPE_ID !=''">
+			AND A.SIGN_TYPE_ID  =  #{SIGN_TYPE_ID}
+		</if>
+	</select>
+	
+	
+	<insert id="INSERT_TENANT_ACCOUNT" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="TENANT_ACCOUNT_ID">
+	  		SELECT COMMERCIAL_TENANT_ACCOUNT_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO COMMERCIAL_TENANT_ACCOUNT(TENANT_ACCOUNT_ID,PAY_CHANNEL_ID,SIGN_TYPE_ID,ORG_ID,ACCOUNT,CHANNEL_APPID,SUB_ACCOUNT,CHANNEL_PRIVATE_KEY,CHANNEL_PUBLICE_KEY,SSLCERT_PATH,SSLCERT_PASSWORD,STATUS_CD,CREATE_STAFF,CREATE_DATE)
+		VALUES(#{TENANT_ACCOUNT_ID},#{PAY_CHANNEL_ID},#{SIGN_TYPE_ID},#{ORG_ID},#{ACCOUNT},#{CHANNEL_APPID},#{SUB_ACCOUNT},#{CHANNEL_PRIVATE_KEY},#{CHANNEL_PUBLICE_KEY},#{SSLCERT_PATH},#{SSLCERT_PASSWORD},1,'24316',sysdate())
+	</insert>
+	
+	<select id="QUERY_PAY_USER" parameterType="map" resultType="hashMap">
+		SELECT A.PAY_USER_ID AS VALUE,
+			   A.PAY_USER_NAME  AS TEXT
+	    FROM PAY_USER A
+	</select>
+	
+	<select id="QUERY_PAY_METHOD" parameterType="map" resultType="hashMap">
+		SELECT A.NODE_PAY_METHOD_ID AS VALUE,
+			   D.PAY_METHOD_NAME  AS TEXT
+	    FROM PAY_NODE_PAY_METHOD A,PAY_USER B,PAY_NODE C, PAY_CHANNEL_PAY_METHOD D
+	    WHERE A.PAY_NODE_ID = C.PAY_NODE_ID 
+	    AND  B.PAY_USER_ID = C.PAY_USER_ID
+	    AND   A.PAY_METHOD_ID = D.PAY_METHOD_ID 		    
+	    <if test="PAY_USER_ID != null and PAY_USER_ID !=''">
+			AND B.PAY_USER_ID  =  #{PAY_USER_ID}
+		</if>
+	</select>
+	
+	<select id="QUERY_TRADE_TYPE" parameterType="map" resultType="hashMap">
+		SELECT A.TRADE_TYPE_ID AS VALUE,
+			   A.TRADE_TYPE_NAME  AS TEXT
+	    FROM TRADE_TYPE A
+	</select>
+	
+	<select id="QUERY_PAY_TYPE" parameterType="map" resultType="hashMap">
+		SELECT A.PAY_TYPE_ID AS VALUE,
+			   A.PAY_TYPE_NAME  AS TEXT
+	    FROM PAY_TYPE A
+	</select>
+	
+	<select id="QUERY_PAY_SERIAL" parameterType="map" resultType="hashMap">
+		SELECT A.PAY_SERIAL_ID ,
+			   A.NODE_PAY_METHOD_ID  ,
+			   PC.PAY_METHOD_NAME,
+			   A.PAY_TYPE_ID,
+			   C.PAY_TYPE_NAME,
+			   A.TRADE_TYPE_ID,
+			   B.TRADE_TYPE_NAME,
+			   A.PAY_CHANNEL_SERIAL,
+			   A.PAY_USER_SERIAL,
+			   A.AMOUNT/100 AS AMOUNT,
+			   A.REAL_AMOUNT/100 AS REAL_AMOUNT,
+			   DATE_FORMAT(A.PAY_DATE,'%Y-%m-%d %H:%i:%s') AS PAY_DATE,
+			   "admin" AS STAFF_ID 
+		FROM PAY_SERIAL A,PAY_CHANNEL_PAY_METHOD PC, TRADE_TYPE B,PAY_TYPE C
+		WHERE A.NODE_PAY_METHOD_ID = PC.PAY_METHOD_ID 
+		  AND A.TRADE_TYPE_ID = B.TRADE_TYPE_ID
+		  AND A.PAY_TYPE_ID = C.PAY_TYPE_ID
+		<if test="PAY_METHOD_ID != null and PAY_METHOD_ID !=''">
+			AND A.NODE_PAY_METHOD_ID  =#{PAY_METHOD_ID}
+		</if>
+		<if test="PAY_TYPE_ID != null and PAY_TYPE_ID !=''">
+			AND A.PAY_TYPE_ID  =  #{PAY_TYPE_ID}
+		</if>
+		<if test="TRADE_TYPE_ID != null and TRADE_TYPE_ID !=''">
+			AND A.TRADE_TYPE_ID  =  #{TRADE_TYPE_ID}
+		</if>
+	</select>
+	<select id="QUERY_PAY_SERIAL_COUNT" parameterType="map" resultType="hashMap">
+		SELECT COUNT(1) as count
+		FROM PAY_SERIAL A,PAY_CHANNEL_PAY_METHOD PC, TRADE_TYPE B,PAY_TYPE C
+		WHERE A.NODE_PAY_METHOD_ID = PC.PAY_METHOD_ID 
+		  AND A.TRADE_TYPE_ID = B.TRADE_TYPE_ID
+		  AND A.PAY_TYPE_ID = C.PAY_TYPE_ID
+		<if test="PAY_METHOD_ID != null and PAY_METHOD_ID !=''">
+			AND A.NODE_PAY_METHOD_ID  =#{PAY_METHOD_ID}
+		</if>
+		<if test="PAY_TYPE_ID != null and PAY_TYPE_ID !=''">
+			AND A.PAY_TYPE_ID  =  #{PAY_TYPE_ID}
+		</if>
+		<if test="TRADE_TYPE_ID != null and TRADE_TYPE_ID !=''">
+			AND A.TRADE_TYPE_ID  =  #{TRADE_TYPE_ID}
+		</if>
+	</select>
+	
+	<insert id="INSERT_PAY_SERIAL" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PAY_SERIAL_ID">
+	  		SELECT PAY_SERIAL_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO PAY_SERIAL(PAY_SERIAL_ID,PAY_NODE_ID,NODE_PAY_METHOD_ID,PAY_TYPE_ID,TRADE_TYPE_ID,PAY_CHANNEL_SERIAL,PAY_USER_SERIAL,AMOUNT,REAL_AMOUNT,STATUS_CD,CREATE_DATE,PAY_DATE,STATUS_DATE,STAFF_ID,ORG_ID)
+		VALUES(#{PAY_SERIAL_ID},#{PAY_NODE_ID},#{PAY_METHOD_ID},#{PAY_TYPE_ID},#{TRADE_TYPE_ID},#{PAY_CHANNEL_SERIAL},#{PAY_USER_SERIAL},#{AMOUNT},#{REAL_AMOUNT},1,sysdate(),sysdate(),sysdate(),'24316','24519765')
+	</insert>
+	
+	<select id="QUERY_PAY_NODE_BY_METHOD" parameterType="map" resultType="hashMap">
+		SELECT A.PAY_NODE_ID AS PAY_NODE_ID
+		FROM PAY_NODE A,PAY_NODE_PAY_METHOD B
+		WHERE A.PAY_NODE_ID = B.PAY_NODE_ID
+		<if test="PAY_METHOD_ID != null and PAY_METHOD_ID !=''">
+			AND B.NODE_PAY_METHOD_ID  =#{PAY_METHOD_ID}
+		</if>
+	</select>
+	
+	<!-- 插入到对帐文件路径表中 -->
+	<insert id="INSERT_CHECK_FILE_PATH" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PATH_ID">
+	  		SELECT CHECK_FILE_PATH_SEQ.nextval()
+		</selectKey>
+		INSERT INTO check_file_path (
+			PATH_ID,
+			LAST_SEND_DATE,
+			LAST_GATHER_DATE,
+			CREATE_STAFF,
+			CREATE_DATE,
+			PROTOCAL_ID,
+			OBJ_ID,
+			OBJ_TYPE,
+			SEND_URL,
+			SEND_IP,
+			SEND_PASSWORD,
+			SEND_USER,
+			SEND_PORT,
+			SEND_PATH,
+			FILENAME_PREFIX,
+			DIRECTION,
+			STATUS_CD,
+			STATUS_DATE,
+			GATHER_URL,
+			GATHER_IP,
+			GATHER_PASSWORD,
+			GATHER_USER,
+			GATHER_PORT,
+			BACKUP_PATH,
+			GATHER_PATH,
+			PERCENT_TIMES
+		)
+	    VALUES (
+			#{PATH_ID},
+			now(),
+			now(),
+			'24316',
+			now(),
+			#{PROTOCAL_ID},
+			1,
+			1,
+			#{SEND_URL},
+			#{SEND_IP},
+			#{SEND_PASSWORD},
+			#{SEND_USER},
+			#{SEND_PORT},
+			#{SEND_PATH},
+			#{FILENAME_PREFIX},
+			#{DIRECTION},
+			3,
+			now(),
+			#{GATHER_URL},
+			#{GATHER_IP},
+			#{GATHER_PASSWORD},
+			#{GATHER_USER},
+			#{GATHER_PORT},
+			#{BACKUP_PATH},
+			#{GATHER_PATH},
+			1
+		)
+	</insert>
+	
+	<insert id="INSERT_GATHER_FILE_PATH_ATTR" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="PAY_CHANNEL_INTF_ATTR_ID">
+	  		SELECT GATHER_FILE_PATH_ATTR_SEQ.nextval()
+		</selectKey>
+		INSERT INTO GATHER_FILE_PATH_ATTR (
+			PAY_CHANNEL_INTF_ATTR_ID,
+			PATH_ID,
+			ATTR_ID,
+			ATTR_VALUE,
+			EFF_DATE,
+			EXP_DATE,
+			STATUS_CD,
+			CREATE_STAFF,
+			CREATE_DATE,
+			STATUS_DATE
+		)
+	    VALUES (
+			#{PAY_CHANNEL_INTF_ATTR_ID},
+			#{PATH_ID},
+			1426,
+			1463,
+			now(),
+			now(),
+			1,
+			'24316',
+			now(),
+			now()
+		)
+	</insert>
+	
+	<!-- 插入到对帐文件列表表中 -->
+	<insert id="INSERT_CHECK_FILE_LIST" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="FILE_ID">
+	  		SELECT CHECK_FILE_LIST_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO check_file_list (
+			FILE_ID,
+			DEAL_DATE,
+			STATUS_CD,
+			PATH_ID,
+			FILE_NAME,
+			FILE_PATH,
+			DIRECTION,
+			STATUS_DATE
+		)
+	    VALUES (
+			#{FILE_ID},
+			now(),
+			3,
+			#{PATH_ID},
+			#{FILE_NAME},
+			#{FILE_PATH},
+			#{DIRECTION},
+			now()
+	   )
+	</insert>
+	
+	<!-- 插入到对帐文件记录表中 -->
+	<insert id="INSERT_CHECK_FILE_RECORD" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="RECORD_ID">
+	  		SELECT CHECK_FILE_RECORD_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO check_file_record (
+			RECORD_ID,
+			CREATE_DATE,
+			PAY_DATE,
+			PAY_TYPE_ID,
+			AMOUNT,
+			PAY_SERIAL_ID,
+			COMMODITY_NAME,
+			COMMODITY_DESC,
+			PAY_SERIAL_NBR,
+			CHECK_DATE,
+			OBJ_ID,
+			OBJ_TYPE,
+			ACCOUNT_ID,
+			REGION_ID,
+			STAFF_ID,
+			FILE_ID,
+			CUSTOMER_ACCOUNT,
+			STATUS_CD,
+			STATUS_DATE,
+			max_diff,
+			USER_CHANNEL_ID
+		)
+	    VALUES (
+			#{RECORD_ID},
+			now(),
+			now(),
+			#{PAY_TYPE_ID},
+			#{AMOUNT},
+			#{PAY_SERIAL_ID},
+			#{COMMODITY_NAME},
+			#{COMMODITY_DESC},
+			#{PAY_SERIAL_NBR},
+			now(),
+			2,
+			2,
+			#{ACCOUNT_ID},
+			#{REGION_ID},
+			'24316',
+			#{FILE_ID},
+			#{CUSTOMER_ACCOUNT},
+			1,
+			now(),
+			#{MAX_DIFF},
+			'2432152200'
+	   )
+	</insert>
+	
+	  <!-- 查询表中的数据量 -->
+	<select id="QUERY_PAY_NODE_CHECK_TOTAL" parameterType="map" resultType="hashMap">
+	select A.CHECK_TOTAL_ID,
+		A.PAY_NODE_ID,
+		D.PAY_NODE_NAME,
+		C.PAY_METHOD_NAME,
+		DATE_FORMAT(
+				A.CHECK_DATE,
+				'%Y-%m-%d'
+			) CHECK_DATE,
+		A.TOTAL_RECORD,
+		A.DIFF_RECORD,
+		A.TOTAL_AMOUNT/100 AS TOTAL_AMOUNT,
+		A.DIFF_AMOUNT/100 AS DIFF_AMOUNT,
+		DATE_FORMAT(
+				A.STATUS_DATE,
+				'%Y-%m-%d'
+			) STATUS_DATE,
+		(CASE
+		  WHEN A.STATUS_CD = '1' THEN '未处理' 
+		  WHEN A.STATUS_CD = '2' THEN '正在处理'
+		WHEN A.STATUS_CD = '3' THEN '处理成功'
+		WHEN A.STATUS_CD = '4' THEN '处理失败'
+		  END
+		)AS STATUS_CD,
+		A.RESULT_DESC,
+		A.CONFIRM_FLAG,
+		DATE_FORMAT(
+				A.CONFIRM_DATE,
+				'%Y-%m-%d'
+			) CONFIRM_DATE
+		 from PAY_NODE_CHECK_TOTAL A, PAY_NODE_PAY_METHOD B ,PAY_CHANNEL_PAY_METHOD C,PAY_NODE D
+		where A.PAY_NODE_ID = B.PAY_NODE_ID
+		AND B.PAY_METHOD_ID = C.PAY_METHOD_ID
+		AND B.PAY_NODE_ID = D.PAY_NODE_ID
+		<if test="STATUS_DATE !=null and STATUS_DATE!=''" >    
+	         AND A.STATUS_DATE = #{STATUS_DATE}
+	    </if> 
+	    <if test="STATUS_CD !=null and STATUS_CD!=''" >    
+	         AND A.STATUS_CD = #{STATUS_CD}
+	    </if> 
+	    <if test="CONFIRM_DATE !=null and CONFIRM_DATE!=''" >    
+	         AND A.CONFIRM_DATE = #{CONFIRM_DATE}
+	    </if> 
+		</select>
+		
+	<!--根据节点Id获取节点支付方式标识 -->
+	<select id="GET_CHECK_TOTAL_ID" parameterType="map" resultType="hashMap">
+		SELECT
+		  CHECK_TOTAL_ID
+		FROM
+		  PAY_NODE_CHECK_TOTAL
+		WHERE
+		  1 = 1
+		<if test="PAY_NODE_ID != null and PAY_NODE_ID !=''">
+			AND PAY_NODE_ID  = #{PAY_NODE_ID}
+		</if>
+	</select>
+	
+	<!--根据节点Id获取节点支付方式标识 -->
+	<select id="QUERY_CHECK_FILE_PATH" parameterType="map" resultType="hashMap">
+		SELECT
+		  PROTOCAL_ID
+		FROM  GATHER_PROTOCAL 
+		ORDER BY PROTOCAL_ID DESC
+	</select>
+	
+	
+	<!-- 插入到pay_node_check_total表中 -->
+	<insert id="INSERT_PAY_NODE_CHECK_TOTAL" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="CHECK_TOTAL_ID">
+	  		SELECT PAY_NODE_CHECK_TOTAL_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO pay_node_check_total (
+			CHECK_TOTAL_ID,
+			STATUS_DATE,
+			CHECK_DATE,
+			STATUS_CD,
+			RESULT_DESC,
+			CONFIRM_FLAG,
+			DIFF_RECORD,
+			DIFF_AMOUNT,
+			TOTAL_RECORD,
+			TOTAL_AMOUNT,
+			PAY_NODE_ID,
+			CONFIRM_DATE
+		)
+	    VALUES (
+			#{CHECK_TOTAL_ID},
+			now(),
+			now(),
+			1,
+			#{RESULT_DESC},
+			#{CONFIRM_FLAG},
+			#{DIFF_RECORD},
+			#{DIFF_AMOUNT},
+			1,
+			#{TOTAL_AMOUNT},
+			#{PAY_NODE_ID},
+			now()
+	   )
+	</insert>
+	
+	<!-- 查询CHECK_FILE_RECORD 表 -->
+	<select id="QUERY_CHECK_FILE_RECORD" parameterType="map" resultType="hashMap">
+		SELECT
+		  RECORD_ID
+		FROM
+		  CHECK_FILE_RECORD
+		ORDER BY CREATE_DATE DESC LIMIT 1
+	</select>
+	
+	<!-- 插入到check_diff表中 -->
+	<insert id="INSERT_CHECK_DIFF" parameterType="map"> 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="CHECK_DIFF_ID">
+	  		SELECT CHECK_DIFF_SEQ.nextval()
+		</selectKey>	
+		INSERT INTO check_diff (
+			CHECK_DIFF_ID,
+			DIFF_TYPE,
+			CREATE_DATE,
+			PAY_DATE,
+			PAY_TYPE_ID,
+			USER_AMOUNT,
+			PAY_USER_SERIAL,
+			COMMODITY_NAME,
+			COMMODITY_DESC,
+			CHECK_DATE,
+			CHECK_TOTAL_ID,
+			ACCOUNT_ID,
+			REGION_ID,
+			STAFF_ID,
+			PAY_SERIAL_ID,
+			CHANNEL_AMOUNT,
+			PAY_CHANNEL_SERIAL,
+			CUSTOMER_ACCOUNT,
+			STATUS_CD,
+			STATUS_DATE,
+			OPER_SERIAL_NBR,
+			OPER_SERIAL_ID,
+			RECORD_ID_A,
+			RECORD_ID_Z
+		)
+	    VALUES (
+			#{CHECK_DIFF_ID},
+			1,
+			now(),
+			now(),
+			#{PAY_TYPE_ID},
+			#{USER_AMOUNT},
+			#{PAY_USER_SERIAL},
+			'充值缴费',
+			'话费充值',
+			now(),
+			#{CHECK_TOTAL_ID},
+			1190348645,
+			551,
+			'3306625',
+			#{PAY_SERIAL_ID},
+			#{CHANNEL_AMOUNT},
+			#{OPER_SERIAL_NBR},
+			1190348645,
+			1,
+			now(),
+			#{OPER_SERIAL_NBR},
+			#{OPER_SERIAL_NBR},
+			#{RECORD_ID_A},
+			#{RECORD_ID_A}-1
+	   )
+	</insert>
+	
+	<!-- 更新pay_node_check_total表字段信息 -->
+	<update id="UPDATE_PAY_NODE_CHECK_TOTAL" parameterType="map"> 
+		UPDATE pay_node_check_total
+		SET 
+		TOTAL_AMOUNT = TOTAL_AMOUNT + #{TOTAL_AMOUNT},
+		DIFF_AMOUNT = DIFF_AMOUNT+ #{DIFF_AMOUNT},
+		TOTAL_RECORD = TOTAL_RECORD + 1,
+		DIFF_RECORD = DIFF_RECORD+ #{DIFF_RECORD},
+		STATUS_DATE = now()
+		WHERE
+		  PAY_NODE_ID = #{PAY_NODE_ID}
+	</update>
+</mapper>

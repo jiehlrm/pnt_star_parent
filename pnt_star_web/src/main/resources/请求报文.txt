@@ -1,0 +1,31 @@
+﻿{
+    "TcpCont":{    		
+        "traceId":"20171130093547692851",--端到端调用标识
+        "spanId":"1000000001",--调用端标识
+        "parentSpanId":"",--父调用端标识
+        "sampledFlag":"0",--采样标志    
+		"debugFlag":"0",--Debug标志
+		"flowCode":"RtBillItem",--流程编码       
+        "srcSysSign":"1000000002",--系统签名（用于校验系统身份）        
+        "reqTime":"20171130093547"--请求时间
+    },
+    "SvcCont":{
+    					 
+			    "oper_staffId": 1,		 	--操作工号标识 (后台session中获取，不用自己加)
+ 				"oper_lanId":1 ,          	--操作人的本地网标识(后台session中获取，不用自己加)  
+			    "start_num":1  ,    		--分页参数(commonservlet中计算出来的)
+			    "end_num":100,				--分页参数(commonservlet中计算出来的)
+			    
+                "staff_id" :"10001035",     --业务参数(前台js封装)
+                "latn_id" :"551",           --业务参数(前台js封装)
+                "file_name":"1.txt",    	--业务参数(前台js封装)
+				"file_path":"",				--业务参数(前台js封装)
+                "task_desc":"批量预存",      	--业务参数(前台js封装)
+                "type":"1",					--业务参数(前台js封装)
+                "task_no":""                --业务参数(前台js封装)
+            }
+         
+    }
+}
+
+

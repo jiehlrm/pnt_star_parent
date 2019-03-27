@@ -1,0 +1,4 @@
+本地测试的时候需要把exceltemplate放到src目录下面
+发版本的时候，注意不要把src下的exceltemplate发给现场，因为现场有可能模板自己调整过了
+配置方法见TPSS_ADJ_QUERY.xls
+代码见http://localhost:18080/TPSS_WEB/html/sampleTable/mutiHeadTable.html

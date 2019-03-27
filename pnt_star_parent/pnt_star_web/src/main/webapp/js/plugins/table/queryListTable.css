@@ -1,0 +1,13 @@
+/*分页*/
+.page{zoom:1; text-align:right;padding:10px;font-family:"微软雅黑";} 
+.page a{padding:4px 8px;border:1px solid #dedede;margin-left:-1px;text-decoration:none;background:#fff;color:#5b6274;} 
+.page a:hover,.page a.hover{color:#fff;background:#4eb2e1;}
+.page_inp{width:30px;line-height:18px;border:1px solid #dedede;text-align:center;font-family:"微软雅黑";margin-right:3px; padding:3px; color:#333}
+.page a.page_normal{padding:0;border:0;margin:0;background:none;font-weight:bold;}
+.page a.page_normal:hover{color:#5b6274;background:none;}
+ /***       
+.checkTable th,.checkTable td {  
+        overflow: hidden;  
+        white-space: nowrap;  
+        text-overflow: ellipsis;  
+    }  ****/       

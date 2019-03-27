@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<title>手工调整</title>
+<!-- 引入公共头部信息 -->
+<script type="text/javascript" src="/pnt_star_web/js/head.js"></script> 
+<script type="text/javascript" src="/TPSS_WEB/js/sampleTable/dynamicTable.js"></script>
+
+</head>
+<body class="p10">
+<!--查询条件-begin-->
+<div>
+	<h3 class="conDiv-head">
+        <em class="leftLine"></em>查询条件
+        <a class="searchMore fr ml10"></a>
+        <div class="fr hideBtn"><button class="btn-s btn-blue" id="search_btn">查询</button><button class="btn-s btn-gray ml10">清空</button></div>
+    </h3>
+    <div class="hideSearch mt5">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="Table-A Table-B">
+        <tr>
+        	<th>本地网</th><td><select class="gy-select"><option>九江</option></select></td>
+        	<th>账期</th><td><select class="gy-select"><option>201801</option></select></td>
+        	<th>业务类型</th><td><select class="gy-select" id="busi_type">
+        	<option value="TPSS_ADJ_QUERY">手工调整</option>
+        	<option value="TPSS_MINGZI_QUERY">民资调整</option>
+        	<option value="TPSS_OTHER_QUERY">其他调整</option>
+        	</select></td>
+    	</tr>
+        <tr>
+        	<th>状态</th><td><select class="gy-select"><option>全部</option></select></td>
+        	<th>批次号</th><td><input  type="text"  class="gy-input" placeholder="请输入"  id="Q_IMP_BATCH_NO"></input></td>
+            <th>类型</th>
+            <td>
+            <!-- <select class="demo" multiple="multiple">
+			    <optgroup label="Languages">
+			        <option value="cp">C++</option>
+			        <option value="cs">C#</option>
+			        <option value="oc">Object C</option>
+			        <option value="c">C</option>
+			    </optgroup>
+			    <optgroup label="Scripts">
+			        <option value="js">JavaScript</option>
+			        <option value="php">PHP</option>
+			        <option value="asp">ASP</option>
+			        <option value="jsp">JSP</option>
+			    </optgroup>
+			</select> -->
+			<select class="demo" multiple="multiple" id="mulselections">
+			        <option value="cp">C++</option>
+			        <option value="cs">C#</option>
+			        <option value="oc">Object C</option>
+			        <option value="c">C</option>
+			</select>
+            
+            </td>
+    	</tr>
+    </table>
+	</div>
+</div>
+<!--查询条件-end-->
+
+<!--查询结果-begin-->
+<div class="mt20">
+    <div><button class="btn-s btn-border" id="layer-1"><span class=" btn-ico ico-dr"></span>导入</button>
+        <button class="btn-s btn-border ml10" id="btn_commit"><span class=" btn-ico ico-tjsp"></span>提交审批</button>
+        <button class="btn-s btn-border ml10" id="layer-2"><span class=" btn-ico ico-sp"></span>审批</button>
+        <button class="btn-s btn-border ml10" id="btn_add"><span class=" btn-ico ico-xz"></span>新增</button></div>
+	<!--表格-begin-->
+		 <div style="min-height:100px; width:100%; overflow-x:auto; border-right:0px solid #e1e1e1">
+			
+			<table  border="0" cellspacing="0" cellpadding="0" class="Table-A checkTable mt10" id="checkTable">
+			</table>
+			
+			<!--分页-begin-->
+			<div class="page" id="tablePageDiv"></div>
+			<!--分页-end-->
+		</div>
+</div>
+<!--查询结果-end-->
+
+<!--弹出层（导入）-begin-->
+<div class="layer-1" style="display:none">
+    <form class="formList column-3">
+    	<ul>
+        	<li><label>本地网：</label><select class="gy-select"><option>九江</option></select></li>
+        	<li><label>账期：</label><select class="gy-select"><option>全部</option></select></li>
+        	<li><label>业务类型：</label><select class="gy-select"><option>全部</option></select></li>
+            <div class="clear"></div>
+        </ul>
+    	<ul>
+        	<li class="w100"><label class="fl"><em>*</em>数据文件：</label><input type="text" id="input" readonly class="gy-input fl w510" placeholder="请选择"/><a href="javascript:void(0);" class="btn-s btn-border file-btn fl ml10">浏览<input type="file" multiple class="file" id="file"></a><a class="btn-s btn-border fl ml10">导入模板下载</a><div class="clear"></div></li>
+            <div class="clear"></div>
+        </ul>
+    	<ul>
+        	<li class="w100"><label><em>*</em>导入说明：</label><textarea class="gy-tara w820" placeholder="请输入"></textarea></li>
+            <div class="clear"></div>
+        </ul>
+    </form>
+</div>
+<!--弹出层（导入）-end-->
+
+<!--弹出层（审批）-begin-->
+<div class="layer-2" style="display:none">
+    <form class="formList column-3 formList-s">
+    	<ul>
+        	<li class="w100 mt0">
+                <label class="fl">审批结论：</label>
+                <div class="radiobox fl mt5">
+                    <p><span class="radio-check radio-checked"><input type="radio" checked /></span>通过</p>
+                    <p><span class="radio-check"><input type="radio" /></span>不通过</p>
+                </div>
+                <div class="clear"></div>
+            </li>
+        	<li class="w100"><label>审批意见：</label><textarea class="gy-tara w420" placeholder="请输入"></textarea></li>
+            <div class="clear"></div>
+        </ul>
+    </form>
+</div>
+<!--弹出层（审批）-end-->
+
+<!--弹出层-begin-->
+<div class="layer-3" style="display:none;height:100px;">
+    <form class="formList column-3" id="add_form">
+    	<ul>
+    	    <li class="w100"><label class="fl w120">账期:</label><input type="text" id="m_billing_cycle" name="m_billing_cycle" class="gy-input fl w300"/></li>
+    	    <li class="w100"><label class="fl w120">网点标识：</label><input type="text" id="m_channel_id" name="m_channel_id" class="gy-input fl w300"/></li>
+            <div class="clear"></div>
+        </ul>
+        <ul>
+        <!--  <li class="w100">
+          <div class="layui-layer-btn layui-layer-btn-">
+            <a class="layui-layer-btn0" id="onSubmit">保存</a>
+            <a class="layui-layer-btn1">取消</a>
+          </div>
+          </li> -->
+          <div class="clear"></div>
+        </ul>
+    </form>
+</div>
+
+</body>
+</html>

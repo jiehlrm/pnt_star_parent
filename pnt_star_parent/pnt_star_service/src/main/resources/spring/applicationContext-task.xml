@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	 							   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	 							   http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx.xsd
+	 							    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd  
+	                              http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<description>Spring公共配置 </description>
+
+
+    <!-- 配置相关类中方法的执行时间-->
+    <task:scheduled-tasks scheduler="taskScheduler" > 
+	    <!--每小时执行一次 -->
+	    <!--<task:scheduled ref="exchangeFtpJobSerivceImpl" method="exchangeFtpAutoInit" cron="0 0 */1 * * ?"/> -->
+	    <!--月出账清理离网客户数据 -->
+	    <!--<task:scheduled ref="clearPointCustInfoTaskImpl" method="clearPointCustInfo" cron="0 0 */1 * * ?"/> -->
+	    <!--每年维护积分客户账本数据 -->
+	    <!--<task:scheduled ref="clearPointAcctInfoTaskImpl" method="clearPointAcctInfo" cron="0 0 */1 * * ?"/> -->
+	    <!--客户高额预警处理-->
+	    <!--<task:scheduled ref="updatePointCustStatusTaskImpl" method="updatePointCustStatus" cron="0 0 */1 * * ?"/> -->
+	    <task:scheduled ref="updatePointCustStatusTaskImpl" method="test" cron="0 0 12 * * ?"/>
+    </task:scheduled-tasks>  
+    <!-- 配置线程池线程数量 -->
+    <task:scheduler id="taskScheduler" pool-size="5"/> 
+
+</beans>
